@@ -231,7 +231,6 @@
     <div class="row" style="margin-top:10px;">
       <div class="col">
         <label>AGENTE *</label>
-        <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena agentes -->
         <select id="agente">
           <option value="">Seleccione un agente...</option>
           <option value="AGUILAR ROJAS, MARÍA">AGUILAR ROJAS, MARÍA</option>
@@ -254,7 +253,6 @@
       </div>
       <div class="col">
         <label>SUPERVISOR *</label>
-        <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena supervisores -->
         <select id="supervisor">
           <option value="">Seleccione un supervisor...</option>
           <option value="ALARCÓN VEGA, JORGE (COORD.)">ALARCÓN VEGA, JORGE (COORD.)</option>
@@ -295,7 +293,6 @@
     <input id="nombres" type="text" readonly placeholder="Se autocompleta con DNI (si existe)" />
     <span id="checkNombres" class="check">✔</span>
 
-    <!-- ✅ FECHA DE NACIMIENTO Y SEXO EN LA MISMA FILA -->
     <div class="row">
       <div class="col">
         <label>FECHA DE NACIMIENTO *</label>
@@ -316,7 +313,6 @@
     <div class="row">
       <div class="col">
         <label>IPRESS *</label>
-        <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena IPRESS (43 actuales) -->
         <select id="ipress" required>
           <option value="">Seleccione IPRESS...</option>
           <option value="C.M. ANCIJE">C.M. ANCIJE</option>
@@ -373,7 +369,6 @@
       </div>
       <div class="col">
         <label>ESPECIALIDAD *</label>
-        <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena especialidades -->
         <select id="espe">
           <option value="">Seleccione especialidad...</option>
           <option value="MEDICINA GENERAL">MEDICINA GENERAL</option>
@@ -397,7 +392,6 @@
     </div>
 
     <label>OBSERVACIÓN * <small style="font-weight:normal;color:#777;">(*) obligatorio</small></label>
-    <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena motivos de observación -->
     <select id="obsSelect">
       <option value="">Seleccione motivo...</option>
       <option value="SIN DISPONIBILIDAD EN EL SISTEMA">SIN DISPONIBILIDAD EN EL SISTEMA</option>
@@ -439,8 +433,8 @@
 <script>
 const $ = id => document.getElementById(id);
 
-// 🔑 CONFIGURACIÓN: PEGA AQUÍ TU URL DE APPS SCRIPT
-const SHEETS_URL = "https://script.google.com/macros/s/AKfycbx9Zjjr3Jp-P-K0dJ2HNq0FowC5uEdQixxIGiQ6YWRbB30WHrqa8YPd8OaVDKNhgyZU/exec"; // ← ¡REEMPLAZA ESTO!
+// 🔑 TU URL DE GOOGLE APPS SCRIPT — YA CONFIGURADA
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbx9Zjjr3Jp-P-K0dJ2HNq0FowC5uEdQixxIGiQ6YWRbB30WHrqa8YPd8OaVDKNhgyZU/exec";
 
 /* Mostrar/Ocultar textarea según selección de observación */
 $('obsSelect').addEventListener('change', function(){
@@ -767,7 +761,6 @@ function validateForm() {
 // 📤 ENVIAR A GOOGLE SHEETS
 async function enviarAGoogleSheets() {
   const data = {
-    FechaHora: new Date().toISOString(),
     Agente: $('agente').value,
     Supervisor: $('supervisor').value,
     TipoDoc: $('tipoDoc').value,
@@ -780,18 +773,19 @@ async function enviarAGoogleSheets() {
     Observacion: $('obsSelect').value,
     ObsDetalle: $('obs').value,
     Celular1: $('cel1').value,
-    Celular2: $('cel2').value
+    Celular2: $('cel2').value || ''
   };
 
   try {
+    // Usa mode: 'no-cors' para evitar errores con Google
     const response = await fetch(SHEETS_URL, {
       method: 'POST',
-      mode: 'no-cors', // Para evitar CORS issues (Google lo permite)
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
 
-    // Si no hay error de red, asumimos éxito (por no-cors limitado)
+    // Como no-cors no devuelve respuesta, asumimos éxito si no hay error de red
     return { success: true };
   } catch (err) {
     return { error: true, message: err.message };
@@ -845,39 +839,40 @@ $('btnGuardar').addEventListener('click', async function(e){
   const result = await enviarAGoogleSheets();
 
   // 🟢/🔴 Actualizar botón y mostrar resultado
-  btn.classList.remove('loading');
-  btn.disabled = false;
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    btn.disabled = false;
 
-  if (result.success) {
-    showToast("Registro guardado en Google Sheets ✅");
-    
-    // Limpiar tras éxito
-    setTimeout(() => {
-      const agF = localStorage.getItem('AGENTE');
-      const spF = localStorage.getItem('SUPERVISOR');
+    if (result.success) {
+      showToast("Registro guardado en Google Sheets ✅");
       
-      ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','cel1','cel2'].forEach(id=>{
-        const el = $(id);
-        if(el) {
-          if(el.tagName === 'SELECT') el.selectedIndex = 0;
-          else el.value = '';
-        }
-      });
-      $('obs').value = '';
-      $('obs').style.display = 'none';
-      
-      if(agF) $('agente').value = agF;
-      if(spF) $('supervisor').value = spF;
-      
-      actualizarRegistro();
-    }, 1200);
-  } else {
-    showErrorField('registro', '✘ Error al enviar a Sheets');
-    showToast("Error: " + (result.message || "No se pudo conectar"), false);
-  }
+      // Limpiar tras éxito
+      setTimeout(() => {
+        const agF = localStorage.getItem('AGENTE');
+        const spF = localStorage.getItem('SUPERVISOR');
+        
+        ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','cel1','cel2'].forEach(id=>{
+          const el = $(id);
+          if(el) {
+            if(el.tagName === 'SELECT') el.selectedIndex = 0;
+            else el.value = '';
+          }
+        });
+        $('obs').value = '';
+        $('obs').style.display = 'none';
+        
+        if(agF) $('agente').value = agF;
+        if(spF) $('supervisor').value = spF;
+        
+        actualizarRegistro();
+      }, 1200);
+    } else {
+      showErrorField('registro', '✘ Error al enviar a Sheets');
+      showToast("Error de red: " + (result.message || "Verifica conexión"), false);
+    }
+  }, 800);
 });
 </script>
 
 </body>
 </html>
-
