@@ -192,6 +192,25 @@
   .status-msg.warning::before { content: "⚠"; }
   .status-msg.error::before { content: "✘"; }
 
+  /* 📤 Loader al guardar */
+  .btn.loading {
+    cursor: not-allowed;
+    opacity: 0.8;
+    position: relative;
+  }
+  .btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 16px; height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   @media (max-width:640px){ 
     .row{ flex-direction:column; } 
     .registro::before { animation: none; }
@@ -211,7 +230,7 @@
 
     <div class="row" style="margin-top:10px;">
       <div class="col">
-        <label>AGENTE</label>
+        <label>AGENTE *</label>
         <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena agentes -->
         <select id="agente">
           <option value="">Seleccione un agente...</option>
@@ -234,7 +253,7 @@
         </div>
       </div>
       <div class="col">
-        <label>SUPERVISOR</label>
+        <label>SUPERVISOR *</label>
         <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena supervisores -->
         <select id="supervisor">
           <option value="">Seleccione un supervisor...</option>
@@ -256,7 +275,7 @@
 
     <div class="row">
       <div class="col">
-        <label>TIPO DE DOCUMENTO</label>
+        <label>TIPO DE DOCUMENTO *</label>
         <select id="tipoDoc">
           <option value="">Seleccione tipo...</option>
           <option value="DNI">DNI</option>
@@ -266,25 +285,25 @@
         </select>
       </div>
       <div class="col">
-        <label>N° DOCUMENTO</label>
+        <label>N° DOCUMENTO *</label>
         <input id="dni" type="text" placeholder="Ingrese número de documento" maxlength="8" inputmode="numeric" />
         <span id="checkDni" class="check">✔</span>
       </div>
     </div>
 
-    <label>APELLIDOS Y NOMBRES</label>
+    <label>APELLIDOS Y NOMBRES *</label>
     <input id="nombres" type="text" readonly placeholder="Se autocompleta con DNI (si existe)" />
     <span id="checkNombres" class="check">✔</span>
 
     <!-- ✅ FECHA DE NACIMIENTO Y SEXO EN LA MISMA FILA -->
     <div class="row">
       <div class="col">
-        <label>FECHA DE NACIMIENTO</label>
+        <label>FECHA DE NACIMIENTO *</label>
         <input id="fechaNacimiento" type="date" />
         <span id="checkFechaNacimiento" class="check">✔</span>
       </div>
       <div class="col">
-        <label>SEXO</label>
+        <label>SEXO *</label>
         <select id="sexo">
           <option value="">Seleccione</option>
           <option value="MASCULINO">MASCULINO</option>
@@ -296,7 +315,7 @@
 
     <div class="row">
       <div class="col">
-        <label>IPRESS</label>
+        <label>IPRESS *</label>
         <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena IPRESS (43 actuales) -->
         <select id="ipress" required>
           <option value="">Seleccione IPRESS...</option>
@@ -353,7 +372,7 @@
         <span id="checkIpress" class="check">✔</span>
       </div>
       <div class="col">
-        <label>ESPECIALIDAD</label>
+        <label>ESPECIALIDAD *</label>
         <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena especialidades -->
         <select id="espe">
           <option value="">Seleccione especialidad...</option>
@@ -377,7 +396,7 @@
       </div>
     </div>
 
-    <label>OBSERVACIÓN <small style="font-weight:normal;color:#777;">(*) obligatorio</small></label>
+    <label>OBSERVACIÓN * <small style="font-weight:normal;color:#777;">(*) obligatorio</small></label>
     <!-- ✏️ EDITA AQUÍ: Añade, elimina o reordena motivos de observación -->
     <select id="obsSelect">
       <option value="">Seleccione motivo...</option>
@@ -397,7 +416,7 @@
 
     <div class="row">
       <div class="col">
-        <label>CELULAR 1</label>
+        <label>CELULAR 1 *</label>
         <input id="cel1" type="tel" placeholder="Ej: 987654321" maxlength="9" inputmode="numeric" />
         <span id="checkCel1" class="check">✔</span>
       </div>
@@ -413,12 +432,15 @@
       <button class="btn" id="btnGuardar">GUARDAR</button>
     </div>
 
-    <p class="note">✅ Todos los campos son obligatorios, excepto CELULAR 2 (contingencia).</p>
+    <p class="note">✅ Todos los campos con * son obligatorios. Datos se envían a Google Sheets.</p>
   </div>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
+
+// 🔑 CONFIGURACIÓN: PEGA AQUÍ TU URL DE APPS SCRIPT
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwwgjXQuRGo_-U9CA2j4bOE7drYeJj5Bsd8J3MbLkzE0daT334ZpM43uF45HnA4YBeF/exec"; // ← ¡REEMPLAZA ESTO!
 
 /* Mostrar/Ocultar textarea según selección de observación */
 $('obsSelect').addEventListener('change', function(){
@@ -456,7 +478,6 @@ function applyFijadoVisual(id, isFixed){
     fixBtn.classList.remove('notfixed'); fixBtn.classList.add('fixed');
     unfixBtn.classList.remove('fixed'); unfixBtn.classList.add('notfixed');
     btnCheck.classList.add('visible');
-    // ✨ Pulse extra al fijar
     input.style.animation = 'pulseSuccess 0.4s, bounce 0.6s 0.2s ease';
     setTimeout(() => input.style.animation = '', 1000);
   } else {
@@ -663,13 +684,11 @@ $('btnNuevo').addEventListener('click',function(e){
   const agF = localStorage.getItem('AGENTE');
   const spF = localStorage.getItem('SUPERVISOR');
   
-  // Limpiar campos excepto agente/supervisor fijados
   ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','obs','cel1','cel2'].forEach(id=>{
     const el = $(id);
     if(el) {
       if(el.tagName === 'SELECT') {
         el.selectedIndex = 0;
-        // Asegurar que el textarea esté oculto
         if(id === 'obsSelect') $('obs').style.display = 'none';
       } else {
         el.value = '';
@@ -677,7 +696,6 @@ $('btnNuevo').addEventListener('click',function(e){
     }
   });
   
-  // Restaurar valores fijados
   if(agF) $('agente').value = agF;
   if(spF) $('supervisor').value = spF;
   
@@ -701,13 +719,10 @@ function validateForm() {
     {id: 'ipress', valid: v => v.trim(), msg: 'IPRESS obligatoria'},
     {id: 'espe', valid: v => v.trim(), msg: 'Especialidad obligatoria'},
     {id: 'obsSelect', valid: v => v.trim(), msg: 'Motivo de observación obligatorio'}
-    // 📝 obs (textarea) se valida condicionalmente abajo
-    // 📱 cel2 → omitido (opcional)
   ];
 
   let firstError = null;
 
-  // Validar campos básicos
   checks.forEach(({id, valid, msg}) => {
     const el = $(id);
     const val = el ? el.value : '';
@@ -719,7 +734,6 @@ function validateForm() {
     }
   });
 
-  // ✅ Validación condicional: si es "OTRO", entonces obs es obligatorio
   const obsSelect = $('obsSelect');
   const obsTextarea = $('obs');
   if (obsSelect.value === 'OTRO') {
@@ -731,11 +745,9 @@ function validateForm() {
       clearFieldStatus('obs');
     }
   } else {
-    // Si no es "OTRO", limpiar cualquier error previo en obs
     clearFieldStatus('obs');
   }
 
-  // ✅ Validar CELULAR 1 (obligatorio)
   const cel1Val = $('cel1').value.replace(/\D/g, '');
   if (!/^\d{7,9}$/.test(cel1Val)) {
     showErrorField('cel1', '✘ CELULAR 1: 7-9 dígitos');
@@ -744,7 +756,6 @@ function validateForm() {
     clearFieldStatus('cel1');
   }
 
-  // 🎯 Scroll suave al primer error
   if (firstError) {
     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => firstError.focus(), 300);
@@ -753,27 +764,62 @@ function validateForm() {
   return firstError;
 }
 
-// Toast de éxito
-function showSuccessToast() {
+// 📤 ENVIAR A GOOGLE SHEETS
+async function enviarAGoogleSheets() {
+  const data = {
+    FechaHora: new Date().toISOString(),
+    Agente: $('agente').value,
+    Supervisor: $('supervisor').value,
+    TipoDoc: $('tipoDoc').value,
+    DNI: $('dni').value.padStart(8, '0'),
+    Nombres: $('nombres').value,
+    FechaNac: $('fechaNacimiento').value,
+    Sexo: $('sexo').value,
+    IPRESS: $('ipress').value,
+    Especialidad: $('espe').value,
+    Observacion: $('obsSelect').value,
+    ObsDetalle: $('obs').value,
+    Celular1: $('cel1').value,
+    Celular2: $('cel2').value
+  };
+
+  try {
+    const response = await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Para evitar CORS issues (Google lo permite)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    // Si no hay error de red, asumimos éxito (por no-cors limitado)
+    return { success: true };
+  } catch (err) {
+    return { error: true, message: err.message };
+  }
+}
+
+// Toast de éxito/error
+function showToast(message, isSuccess = true) {
+  const color = isSuccess ? '#28a745' : '#e74c3c';
   const toast = document.createElement('div');
   toast.innerHTML = `
     <div style="
       position:fixed; top:20px; right:20px; 
-      background:#28a745; color:white; 
+      background:${color}; color:white; 
       padding:14px 24px; border-radius:8px; 
       box-shadow:0 6px 20px rgba(0,0,0,0.2);
       font-weight:700; z-index:10000;
       animation: slideIn 0.4s, fadeOut 0.4s 2.6s;
     ">
-      ✔️ ¡Registro guardado con éxito!
+      ${isSuccess ? '✔️' : '❌'} ${message}
     </div>
   `;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
 
-// Guardar
-$('btnGuardar').addEventListener('click',function(e){
+// Guardar + Enviar
+$('btnGuardar').addEventListener('click', async function(e){
   e.preventDefault();
 
   document.querySelectorAll('.status-msg').forEach(el => el.remove());
@@ -781,48 +827,54 @@ $('btnGuardar').addEventListener('click',function(e){
   const firstError = validateForm();
   if(firstError) return;
 
-  // ✨ Marcar todos como ✔ (excepto cel2 si está vacío)
+  // 🟡 Activar estado de carga
+  const btn = $('btnGuardar');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  // ✨ Mostrar éxito local primero
   [
     'agente','supervisor','tipoDoc','dni','nombres','fechaNacimiento','sexo',
     'ipress','espe','obsSelect','cel1'
   ].forEach(id => showSuccessField(id, '✔ Listo'));
+  
+  if($('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
+  if($('cel2').value.trim()) showSuccessField('cel2', '✔ Listo');
 
-  // obs: solo si aplica
-  if($('obsSelect').value === 'OTRO') {
-    showSuccessField('obs', '✔ Detalle agregado');
+  // 📤 Enviar a Google Sheets
+  const result = await enviarAGoogleSheets();
+
+  // 🟢/🔴 Actualizar botón y mostrar resultado
+  btn.classList.remove('loading');
+  btn.disabled = false;
+
+  if (result.success) {
+    showToast("Registro guardado en Google Sheets ✅");
+    
+    // Limpiar tras éxito
+    setTimeout(() => {
+      const agF = localStorage.getItem('AGENTE');
+      const spF = localStorage.getItem('SUPERVISOR');
+      
+      ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','cel1','cel2'].forEach(id=>{
+        const el = $(id);
+        if(el) {
+          if(el.tagName === 'SELECT') el.selectedIndex = 0;
+          else el.value = '';
+        }
+      });
+      $('obs').value = '';
+      $('obs').style.display = 'none';
+      
+      if(agF) $('agente').value = agF;
+      if(spF) $('supervisor').value = spF;
+      
+      actualizarRegistro();
+    }, 1200);
   } else {
-    clearFieldStatus('obs');
+    showErrorField('registro', '✘ Error al enviar a Sheets');
+    showToast("Error: " + (result.message || "No se pudo conectar"), false);
   }
-
-  // cel2: opcional
-  if($('cel2').value.trim()) {
-    showSuccessField('cel2', '✔ Listo');
-  }
-
-  showSuccessToast();
-
-  localStorage.setItem('AGENTE', $('agente').value);
-  localStorage.setItem('SUPERVISOR', $('supervisor').value);
-
-  setTimeout(() => {
-    const agF = localStorage.getItem('AGENTE');
-    const spF = localStorage.getItem('SUPERVISOR');
-    
-    ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','cel1','cel2'].forEach(id=>{
-      const el = $(id);
-      if(el) {
-        if(el.tagName === 'SELECT') el.selectedIndex = 0;
-        else el.value = '';
-      }
-    });
-    $('obs').value = '';
-    $('obs').style.display = 'none';
-    
-    if(agF) $('agente').value = agF;
-    if(spF) $('supervisor').value = spF;
-    
-    actualizarRegistro();
-  }, 1200);
 });
 </script>
 
