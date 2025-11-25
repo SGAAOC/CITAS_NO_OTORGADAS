@@ -394,16 +394,15 @@
     <label>OBSERVACIÓN * <small style="font-weight:normal;color:#777;">(*) obligatorio</small></label>
     <select id="obsSelect">
       <option value="">Seleccione motivo...</option>
-      <option value="SIN DISPONIBILIDAD EN EL SISTEMA">SIN DISPONIBILIDAD EN EL SISTEMA</option>
-      <option value="ERROR EN REGISTRO DEL PACIENTE">ERROR EN REGISTRO DEL PACIENTE</option>
-      <option value="PACIENTE NO TIENE DERECHO A CITA">PACIENTE NO TIENE DERECHO A CITA</option>
-      <option value="AFILIACIÓN NO VIGENTE">AFILIACIÓN NO VIGENTE</option>
-      <option value="DATOS INCORRECTOS EN SIS">DATOS INCORRECTOS EN SIS</option>
-      <option value="CITA YA AGENDADA">CITA YA AGENDADA</option>
-      <option value="REQUIERE DERIVACIÓN">REQUIERE DERIVACIÓN</option>
-      <option value="PACIENTE NO ACUDE A CITA PREVIA">PACIENTE NO ACUDE A CITA PREVIA</option>
-      <option value="CENTRO NO OFRECE LA ESPECIALIDAD">CENTRO NO OFRECE LA ESPECIALIDAD</option>
-      <option value="OTRO">OTRO</option>
+      <option value="HISTORIA CLINICA BLOQUEADA">HISTORIA CLINICA BLOQUEADA</option>
+      <option value="NO CUENTA CON VIGENCIA DE ATENCIÓN">NO CUENTA CON VIGENCIA DE ATENCIÓN</option>
+      <option value="NO SE CUENTA CON CITAS DISPONIBLES">NO SE CUENTA CON CITAS DISPONIBLES</option>
+      <option value="NO SE CUENTA CON PROGRAMACIÓN DISPONIBLE">NO SE CUENTA CON PROGRAMACIÓN DISPONIBLE</option>
+      <option value="EEL NO OTORGA CITAS A PACIENTES REFERIDOS">EEL NO OTORGA CITAS A PACIENTES REFERIDOS</option>
+      <option value="EEL NO OTORGA CITAS DE ESPECIALIDADES EN ALGUNAS IPRESS">EEL NO OTORGA CITAS DE ESPECIALIDADES EN ALGUNAS IPRESS</option>
+      <option value="NO HAY CITAS DISPONIBLES DE TELECONSULTA">NO HAY CITAS DISPONIBLES DE TELECONSULTA</option>
+      <option value="PACIENTE ADSCRITO A PROVINCIA">PACIENTE ADSCRITO A PROVINCIA</option>
+
     </select>
     <textarea id="obs" placeholder="Detalles adicionales (si aplica)..." style="margin-top:6px;display:none;"></textarea>
     <span id="checkObs" class="check">✔</span>
@@ -877,6 +876,7 @@ $('btnGuardar').addEventListener('click', async function(e){
 </body>
 
 </html>
+
 
 
 
