@@ -138,14 +138,12 @@
     box-shadow: 0 0 0 2px var(--focus) !important;
   }
   .note{ font-size:12px; color:#456; margin-top:6px; }
-
   /* ✅ ESTILOS MEJORADOS */
   input:focus, select:focus {
     border-color: var(--focus) !important;
     box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.3) !important;
     outline: none;
   }
-
   .success {
     border-color: var(--success) !important;
     background-color: var(--success-light) !important;
@@ -157,19 +155,16 @@
     70% { box-shadow: 0 0 0 8px rgba(40,167,69,0); }
     100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
   }
-
   .incomplete {
     border-color: var(--warning-dark) !important;
     background-color: rgba(255, 235, 59, 0.08) !important;
     box-shadow: 0 0 0 2px rgba(242, 180, 0, 0.1) !important;
   }
-
   .error-field {
     border-color: var(--error) !important;
     background-color: var(--error-light) !important;
     box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15) !important;
   }
-
   .status-msg {
     font-size: 11px;
     margin-top: 4px;
@@ -183,7 +178,6 @@
   .status-msg.warning { background: rgba(255, 235, 59, 0.2); color: var(--warning-dark); }
   .status-msg.error { background: var(--error-light); color: var(--error); }
   @keyframes fadeIn { from { opacity:0; transform: translateY(-3px); } to { opacity:1; transform: translateY(0); } }
-
   .status-msg::before {
     margin-right: 4px;
     font-weight: bold;
@@ -191,7 +185,6 @@
   .status-msg.success::before { content: "✔"; }
   .status-msg.warning::before { content: "⚠"; }
   .status-msg.error::before { content: "✘"; }
-
   /* 📤 Loader al guardar */
   .btn.loading {
     cursor: not-allowed;
@@ -210,12 +203,10 @@
     animation: spin 1s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   @media (max-width:640px){ 
     .row{ flex-direction:column; } 
     .registro::before { animation: none; }
   }
-
   /* 🔍 ESTILOS DEL BUSCADOR */
   .search-container {
     position: relative;
@@ -279,6 +270,11 @@
   .search-input-wrapper input {
     padding-left: 30px;
   }
+  /* ✏️ Botón de edición temporal */
+  #btnEditarUltimo {
+    background: #28a745 !important;
+    animation: fadeIn 0.3s, pulseSuccess 0.8s;
+  }
 </style>
 </head>
 <body>
@@ -286,12 +282,9 @@
   <header>
     <h1>DEMANDA DE CITAS NO OTORGADAS</h1>
   </header>
-
   <div class="card">
-
     <label>REGISTRO (Fecha y Hora)</label>
     <div id="registro" class="registro" aria-live="polite"></div>
-
     <div class="row" style="margin-top:10px;">
       <div class="col">
         <label>AGENTE *</label>
@@ -301,10 +294,7 @@
             <input type="text" id="agente-search" class="search-input" placeholder="Buscar agente..." autocomplete="off" />
           </div>
           <select id="agente" style="display: none;">
-            
             <!--<option value="">Seleccione un agente...</option>-->
-
-
             
 <option value="5003-CONDORI VALDIVIA XIOMARA ISABEL">5003 - CONDORI VALDIVIA XIOMARA ISABEL</option>
 <option value="5004-RUMICHE RUMICHE MILAGROS MARIBEL">5004 - RUMICHE RUMICHE MILAGROS MARIBEL</option>
@@ -703,6 +693,11 @@
 
 
 
+
+            
+
+
+
             
           </select>
           <div id="agente-search-results" class="search-results" style="display: none;"></div>
@@ -722,10 +717,7 @@
             <input type="text" id="supervisor-search" class="search-input" placeholder="Buscar supervisor..." autocomplete="off" />
           </div>
           <select id="supervisor" style="display: none;">
-            
             <!--<option value="">Seleccione un supervisor...</option>-->
-
-            
 <option value="ALTAMIRANO ZUÑIGA SHARON LUCIA">ALTAMIRANO ZUÑIGA SHARON LUCIA</option>
 <option value="ARAGON CAMPOS INGRI JANETT">ARAGON CAMPOS INGRI JANETT</option>
 <option value="BAUTISTA MENDOZA JENNIFER JANNET">BAUTISTA MENDOZA JENNIFER JANNET</option>
@@ -742,10 +734,6 @@
 <option value="SALES TELLO JIMENA CONSUELO">SALES TELLO JIMENA CONSUELO</option>
 <option value="SANTILLANA RODRIGUEZ LAURA LUZ">SANTILLANA RODRIGUEZ LAURA LUZ</option>
 <option value="UGAZ JEU MONICA">UGAZ JEU MONICA</option>
-
-
-
-            
           </select>
           <div id="supervisor-search-results" class="search-results" style="display: none;"></div>
         </div>
@@ -757,7 +745,6 @@
         </div>
       </div>
     </div>
-
     <div class="row">
       <div class="col">
         <label>TIPO DE DOCUMENTO *</label>
@@ -776,11 +763,9 @@
         <span id="checkDni" class="check">✔</span>
       </div>
     </div>
-
     <label>APELLIDOS Y NOMBRES *</label>
     <input id="nombres" type="text" readonly placeholder="Se autocompleta con DNI (si existe)" />
     <span id="checkNombres" class="check">✔</span>
-
     <div class="row">
       <div class="col">
         <label>FECHA DE NACIMIENTO *</label>
@@ -797,7 +782,6 @@
         <span id="checkSexo" class="check">✔</span>
       </div>
     </div>
-
     <div class="row">
       <div class="col">
         <label>IPRESS *</label>
@@ -807,9 +791,7 @@
             <input type="text" id="ipress-search" class="search-input" placeholder="Buscar IPRESS..." autocomplete="off" />
           </div>
           <select id="ipress" required style="display: none;">
-            
            <!--<option value="">Seleccione IPRESS...</option>-->
-            
 <option value="CM ANCIJE">C.M. ANCIJE</option>
 <option value="CM MALA">C.M. MALA</option>
 <option value="CAP II CHANCAY">CAP II CHANCAY</option>
@@ -858,10 +840,6 @@
 <option value="POLICLINICO BAYOVAR">POLICLÍNICO BAYÓVAR</option>
 <option value="POLICLINICO SAN CARLOS">POLICLÍNICO SAN CARLOS</option>
 <option value="RETABLO - COMAS">RETABLO - COMAS</option>
-
-
-
-            
           </select>
           <div id="ipress-search-results" class="search-results" style="display: none;"></div>
         </div>
@@ -875,9 +853,7 @@
             <input type="text" id="espe-search" class="search-input" placeholder="Buscar especialidad..." autocomplete="off" />
           </div>
           <select id="espe" style="display: none;">
-            
             <!--<option value="">Seleccione especialidad...</option>-->
-            
 <option value="CARDIOLOGÍA">CARDIOLOGÍA</option>
 <option value="CIRUGÍA CARDIOVASCULAR">CIRUGÍA CARDIOVASCULAR</option>
 <option value="CIRUGÍA GENERAL">CIRUGÍA GENERAL</option>
@@ -891,7 +867,7 @@
 <option value="GINECO - OBSTÉTRICA">GINECO - OBSTÉTRICA</option>
 <option value="GINECOLOGÍA">GINECOLOGÍA</option>
 <option value="HEMATOLOGÍA">HEMATOLOGÍA</option>
-<option value="INFECTOLOGIA">INFECTOLOGÍA</option>
+<option value="INFECTOLOGIA">INFECTOLOGIA</option>
 <option value="MED. COMPLEMENTARIA">MED. COMPLEMENTARIA</option>
 <option value="MED. FÍSICA Y REHABILITACIÓN">MED. FÍSICA Y REHABILITACIÓN</option>
 <option value="MEDICINA FAMILIAR">MEDICINA FAMILIAR</option>
@@ -916,17 +892,12 @@
 <option value="REUMATOLOGÍA">REUMATOLOGÍA</option>
 <option value="TERAPIA FÍSICA">TERAPIA FÍSICA</option>
 <option value="UROLOGÍA">UROLOGÍA</option>
-
-
-
-            
           </select>
           <div id="espe-search-results" class="search-results" style="display: none;"></div>
         </div>
         <span id="checkEspe" class="check">✔</span>
       </div>
     </div>
-
     <label>OBSERVACIÓN * <small style="font-weight:normal;color:#777;">(*) obligatorio</small></label>
     <select id="obsSelect">
       <option value="">Seleccione motivo...</option>
@@ -941,7 +912,6 @@
     </select>
     <span id="checkObs" class="check">✔</span>
     <textarea id="obs" placeholder="Detalles adicionales (si aplica)..." style="margin-top:6px;display:none;"></textarea>
-
     <div class="row">
       <div class="col">
         <label>CELULAR 1 *</label>
@@ -954,21 +924,88 @@
         <span id="checkCel2" class="check">✔</span>
       </div>
     </div>
-
     <div class="btns">
       <button class="btn secondary" id="btnNuevo">NUEVO REGISTRO</button>
       <button class="btn" id="btnGuardar">GUARDAR</button>
+      <!-- ✏️ Botón de edición temporal -->
+      <button id="btnEditarUltimo" class="btn secondary" style="display: none;">✏️ Editar último (5s)</button>
     </div>
-
     <p class="note">✅ Todos los campos con * son obligatorios. Datos se envían a Google Sheets.</p>
   </div>
 </div>
-
 <script>
 const $ = id => document.getElementById(id);
-
 // 🔑 TU URL DE GOOGLE APPS SCRIPT — YA CONFIGURADA
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbx9Zjjr3Jp-P-K0dJ2HNq0FowC5uEdQixxIGiQ6YWRbB30WHrqa8YPd8OaVDKNhgyZU/exec";
+
+/* 🔒 MECANISMO DE DUPLICADOS + EDICIÓN TEMPORAL */
+// Clave única para evitar duplicados: DNI + IPRESS + ESPECIALIDAD + OBSERVACIÓN
+function getDuplicadoKey(data) {
+  return `${data.DNI}-${data.IPRESS}-${data.Especialidad}-${data.Observacion}`.toUpperCase();
+}
+
+// Cargar caché local (últimos 50 registros)
+let registrosGuardados = JSON.parse(localStorage.getItem('registros_guardados') || '[]');
+if (registrosGuardados.length > 50) {
+  registrosGuardados = registrosGuardados.slice(-50);
+  localStorage.setItem('registros_guardados', JSON.stringify(registrosGuardados));
+}
+
+// Verificar duplicado
+function isDuplicado(data) {
+  const key = getDuplicadoKey(data);
+  return registrosGuardados.some(r => getDuplicadoKey(r) === key);
+}
+
+// Guardar registro en caché
+function guardarEnCache(data) {
+  const registroConTS = { ...data, timestamp: Date.now() };
+  registrosGuardados.push(registroConTS);
+  if (registrosGuardados.length > 50) registrosGuardados.shift();
+  localStorage.setItem('registros_guardados', JSON.stringify(registrosGuardados));
+  return registroConTS;
+}
+
+// ✏️ Botón de edición temporal (5s)
+let timeoutEditar;
+let ultimoRegistroGuardado = null;
+
+function mostrarBotonEditarTemporal() {
+  if (timeoutEditar) clearTimeout(timeoutEditar);
+  const btn = $('btnEditarUltimo');
+  btn.style.display = 'inline-block';
+  btn.onclick = () => {
+    if (!ultimoRegistroGuardado) return;
+    // Restaurar campos
+    $('agente').value = ultimoRegistroGuardado.Agente || '';
+    $('supervisor').value = ultimoRegistroGuardado.Supervisor || '';
+    $('tipoDoc').value = ultimoRegistroGuardado.TipoDoc || 'DNI';
+    $('dni').value = ultimoRegistroGuardado.DNI || '';
+    $('nombres').value = ultimoRegistroGuardado.Nombres || '';
+    $('fechaNacimiento').value = ultimoRegistroGuardado.FechaNac || '';
+    $('sexo').value = ultimoRegistroGuardado.Sexo || '';
+    $('ipress').value = ultimoRegistroGuardado.IPRESS || '';
+    $('espe').value = ultimoRegistroGuardado.Especialidad || '';
+    $('obsSelect').value = ultimoRegistroGuardado.Observacion || '';
+    $('obs').value = ultimoRegistroGuardado.ObsDetalle || '';
+    $('obs').style.display = (ultimoRegistroGuardado.Observacion === 'OTRO') ? 'block' : 'none';
+    $('cel1').value = ultimoRegistroGuardado.Celular1 || '';
+    $('cel2').value = ultimoRegistroGuardado.Celular2 || '';
+    // Sincronizar inputs de búsqueda
+    $('ipress-search').value = $('ipress option[value="' + ultimoRegistroGuardado.IPRESS + '"]')?.text || '';
+    $('espe-search').value = $('espe option[value="' + ultimoRegistroGuardado.Especialidad + '"]')?.text || '';
+    // Disparar eventos para UI
+    ['agente','supervisor','ipress','espe','obsSelect'].forEach(id => $(id).dispatchEvent(new Event('change')));
+    // Opcional: saltar chequeo de duplicado en próxima vez
+    sessionStorage.setItem('skipDuplicadoCheck', 'true');
+    // Ocultar botón
+    btn.style.display = 'none';
+    $('dni').focus();
+  };
+  timeoutEditar = setTimeout(() => {
+    btn.style.display = 'none';
+  }, 5000);
+}
 
 /* Mostrar/Ocultar textarea según selección de observación */
 $('obsSelect').addEventListener('change', function(){
@@ -981,7 +1018,6 @@ $('obsSelect').addEventListener('change', function(){
     textarea.value = '';
   }
 });
-
 /* Fecha / hora */
 function formatoAmigable(date){
   const opts = { weekday:'long', day:'2-digit', month:'long',
@@ -993,7 +1029,6 @@ function formatoAmigable(date){
 function actualizarRegistro(){ $('registro').innerText = formatoAmigable(new Date()); }
 setInterval(actualizarRegistro,1000);
 actualizarRegistro();
-
 /* ✅ Fijar / no fijar + animación pulse */
 function applyFijadoVisual(id, isFixed){
   const input = $(id);
@@ -1033,7 +1068,6 @@ $('fixAgente').addEventListener('click', ()=> fijarCampo('agente','AGENTE'));
 $('unfixAgente').addEventListener('click', ()=> nofijarCampo('agente','AGENTE'));
 $('fixSupervisor').addEventListener('click', ()=> fijarCampo('supervisor','SUPERVISOR'));
 $('unfixSupervisor').addEventListener('click', ()=> nofijarCampo('supervisor','SUPERVISOR'));
-
 window.addEventListener('load',()=>{
   const ag=localStorage.getItem('AGENTE'); 
   const sp=localStorage.getItem('SUPERVISOR');
@@ -1046,7 +1080,6 @@ window.addEventListener('load',()=>{
     applyFijadoVisual('supervisor',true);
   }
 });
-
 /* ✅ Funciones de estado visual */
 function showStatusMsg(input, text, type) {
   const prev = input.nextElementSibling;
@@ -1056,7 +1089,6 @@ function showStatusMsg(input, text, type) {
   span.textContent = text;
   input.parentNode.insertBefore(span, input.nextSibling);
 }
-
 function showSuccessField(inputId, msg = "✔ Listo") {
   const input = $(inputId);
   if(!input) return;
@@ -1065,7 +1097,6 @@ function showSuccessField(inputId, msg = "✔ Listo") {
   showStatusMsg(input, msg, 'success');
   setTimeout(() => input.classList.remove('success'), 1500);
 }
-
 function showWarningField(inputId, msg = "⚠ Incompleto") {
   const input = $(inputId);
   if(!input) return;
@@ -1073,7 +1104,6 @@ function showWarningField(inputId, msg = "⚠ Incompleto") {
   input.classList.add('incomplete');
   showStatusMsg(input, msg, 'warning');
 }
-
 function showErrorField(inputId, msg = "✘ Inválido") {
   const input = $(inputId);
   if(!input) return;
@@ -1081,7 +1111,6 @@ function showErrorField(inputId, msg = "✘ Inválido") {
   input.classList.add('error-field');
   showStatusMsg(input, msg, 'error');
 }
-
 function clearFieldStatus(inputId) {
   const input = $(inputId);
   if(!input) return;
@@ -1089,7 +1118,6 @@ function clearFieldStatus(inputId) {
   const msg = input.nextElementSibling;
   if(msg && msg.classList.contains('status-msg')) msg.remove();
 }
-
 /* DNI */
 $('dni').addEventListener('input', function(){
   this.value = this.value.replace(/\D/g, '').slice(0,8);
@@ -1103,7 +1131,6 @@ $('dni').addEventListener('blur', function(){
     showWarningField('dni', '⚠ Ingrese 8 dígitos');
   }
 });
-
 /* Buscar DNI */
 async function buscarDNI(dni){
   const url = `http://172.20.60.152:8000/buscar/${encodeURIComponent(dni)}`;
@@ -1115,20 +1142,17 @@ async function buscarDNI(dni){
       return; 
     }
     const data = await resp.json();
-
     const normalize = obj => {
       const keys = {};
       for(let k in obj) keys[k.toLowerCase()] = obj[k];
       return keys;
     };
     const d = normalize(data);
-
     const nombreCompleto = d.nombre_completo || d.apellidos_nombres || 
       (d.apellido_paterno && d.apellido_materno && d.nombres 
         ? `${d.apellido_paterno} ${d.apellido_materno} ${d.nombres}` : null) || null;
     $('nombres').value = nombreCompleto ? String(nombreCompleto).toUpperCase() : '';
     $('nombres').readOnly = !!nombreCompleto;
-
     let fechaNac = d.fecha_nacimiento || d.fecha_nac || d.fechanac;
     if(fechaNac && typeof fechaNac === 'string'){
       const parts = fechaNac.split(/[\/\-]/);
@@ -1141,7 +1165,6 @@ async function buscarDNI(dni){
         }
       }
     }
-
     const sexoVal = d.sexo || d.genero || '';
     if(/masculino|m/i.test(String(sexoVal))) {
       $('sexo').value = 'MASCULINO';
@@ -1150,13 +1173,11 @@ async function buscarDNI(dni){
       $('sexo').value = 'FEMENINO';
       showSuccessField('sexo', '✔ Sexo cargado');
     }
-
     if(nombreCompleto) {
       showSuccessField('nombres', '✔ Nombre cargado');
     }
     $('checkDni').classList.add('visible');
     setTimeout(() => $('checkDni').classList.remove('visible'), 2000);
-
   }catch(err){ 
     $('nombres').value = '';
     $('nombres').readOnly = false;
@@ -1164,7 +1185,6 @@ async function buscarDNI(dni){
     $('sexo').value = '';
   }
 }
-
 let debounce;
 $('dni').addEventListener('input', function(){
   clearTimeout(debounce);
@@ -1190,7 +1210,6 @@ $('dni').addEventListener('keydown',(e)=>{
     }
   } 
 });
-
 // Celulares
 function validarCelular(inputId, checkId) {
   const input = $(inputId);
@@ -1205,7 +1224,6 @@ function validarCelular(inputId, checkId) {
 }
 $('cel1').addEventListener('input', () => validarCelular('cel1', 'checkCel1'));
 $('cel2').addEventListener('input', () => validarCelular('cel2', 'checkCel2'));
-
 // ✅ Activar check inmediato en select (IPRESS, ESPECIALIDAD, OBS)
 ['ipress', 'espe', 'obsSelect', 'agente', 'supervisor', 'tipoDoc', 'sexo'].forEach(id => {
   const el = $(id);
@@ -1225,18 +1243,11 @@ $('cel2').addEventListener('input', () => validarCelular('cel2', 'checkCel2'));
     });
   }
 });
-
-// Nuevo registro
-
-
-
 // Nuevo registro
 $('btnNuevo').addEventListener('click', function(e){ 
   e.preventDefault();
-  
   const agF = localStorage.getItem('AGENTE');
   const spF = localStorage.getItem('SUPERVISOR');
-  
   // Limpiar todos los campos
   const fieldsToReset = [
     'dni', 'nombres', 'fechaNacimiento', 'cel1', 'cel2', 'obs'
@@ -1245,7 +1256,6 @@ $('btnNuevo').addEventListener('click', function(e){
     const el = $(id);
     if (el) el.value = '';
   });
-
   // Limpiar selects obligatorios → forzar valor vacío
   const selectFields = ['tipoDoc', 'sexo', 'ipress', 'espe', 'obsSelect'];
   selectFields.forEach(id => {
@@ -1255,35 +1265,25 @@ $('btnNuevo').addEventListener('click', function(e){
       clearFieldStatus(id);
     }
   });
-
   // ✅ Limpiar los inputs de búsqueda (esto es lo nuevo!)
   $('ipress-search').value = '';
   $('espe-search').value = '';
-
   // ✅ Ocultar textarea de observación
   $('obs').style.display = 'none';
-
   // ✅ Restaurar Agente/Supervisor si están fijados
   if (agF) $('agente').value = agF;
   if (spF) $('supervisor').value = spF;
-
   // ✅ Limpiar UI: mensajes y clases visuales
   document.querySelectorAll('.status-msg').forEach(el => el.remove());
   document.querySelectorAll('input, select').forEach(el => {
     el.classList.remove('success', 'incomplete', 'error-field');
   });
-
   // ✅ Actualizar registro
   actualizarRegistro();
 });
-
-
-
 // ✅ VALIDACIÓN FINAL: TODOS OBLIGATORIOS EXCEPTO CELULAR 2
-
 function validateForm() {
   let isValid = true;
-
   const requiredFields = [
     { id: 'agente',          valid: v => !!v.trim(),                     msg: 'Agente obligatorio' },
     { id: 'supervisor',      valid: v => !!v.trim(),                     msg: 'Supervisor obligatorio' },
@@ -1299,9 +1299,7 @@ function validateForm() {
     { id: 'espe',            valid: v => !!v.trim(),                     msg: 'Especialidad obligatoria' },
     { id: 'obsSelect',       valid: v => !!v.trim(),                     msg: 'Motivo de observación obligatorio' }
   ];
-
   let firstErrorEl = null;
-
   requiredFields.forEach(({ id, valid, msg }) => {
     const el = $(id);
     if (!el) return;
@@ -1314,7 +1312,6 @@ function validateForm() {
       clearFieldStatus(id);
     }
   });
-
   // ✅ Validar detalle si es OTRO
   if ($('obsSelect').value === 'OTRO') {
     const obsVal = $('obs').value.trim();
@@ -1328,7 +1325,6 @@ function validateForm() {
   } else {
     clearFieldStatus('obs');
   }
-
   // ✅ Validar CELULAR 1 (obligatorio, 7-9 dígitos)
   const cel1Val = $('cel1').value.replace(/\D/g, '');
   if (!/^\d{7,9}$/.test(cel1Val)) {
@@ -1338,7 +1334,6 @@ function validateForm() {
   } else {
     clearFieldStatus('cel1');
   }
-
   // ✅ Enfocar primer error
   if (firstErrorEl) {
     firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1347,12 +1342,8 @@ function validateForm() {
     else if (firstErrorEl.id === 'espe') $('espe-search').focus();
     else firstErrorEl.focus();
   }
-
   return isValid; // ✅ true = válido, false = hay errores
 }
-
-
-
 // 📤 ENVIAR A GOOGLE SHEETS
 async function enviarAGoogleSheets() {
   const data = {
@@ -1370,23 +1361,29 @@ async function enviarAGoogleSheets() {
     Celular1: $('cel1').value,
     Celular2: $('cel2').value || ''
   };
-
   try {
-    // Usa mode: 'no-cors' para evitar errores con Google
+    const skipCheck = sessionStorage.getItem('skipDuplicadoCheck') === 'true';
+    if (!skipCheck) {
+      if (isDuplicado(data)) {
+        showToast("⚠️ Ya se registró esta solicitud:\nEspecialidad: " + data.Especialidad + "\nIPRESS: " + data.IPRESS, false);
+        $('ipress-search').focus();
+        return { duplicate: true };
+      }
+    } else {
+      sessionStorage.removeItem('skipDuplicadoCheck');
+    }
+
     const response = await fetch(SHEETS_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-
-    // Como no-cors no devuelve respuesta, asumimos éxito si no hay error de red
-    return { success: true };
+    return { success: true, data };
   } catch (err) {
     return { error: true, message: err.message };
   }
 }
-
 // Toast de éxito/error
 function showToast(message, isSuccess = true) {
   const color = isSuccess ? '#28a745' : '#e74c3c';
@@ -1406,26 +1403,18 @@ function showToast(message, isSuccess = true) {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
-
-
-
-
-
 // Guardar + Enviar
 $('btnGuardar').addEventListener('click', async function(e){
   e.preventDefault();
   document.querySelectorAll('.status-msg').forEach(el => el.remove());
-
   // ✅ Validar primero
   if (!validateForm()) {
     return; // ← ¡DETENER AQUÍ si hay errores!
   }
-
-  // ✅ Solo si pasa la validación: continuar
+  // ✅ Solo si pasa la validación y no es duplicado: continuar
   const btn = $('btnGuardar');
   btn.classList.add('loading');
   btn.disabled = true;
-
   // ✅ Mostrar feedback visual
   [
     'agente','supervisor','tipoDoc','dni','nombres','fechaNacimiento','sexo',
@@ -1433,37 +1422,39 @@ $('btnGuardar').addEventListener('click', async function(e){
   ].forEach(id => showSuccessField(id, '✔ Listo'));
   if($('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
   if($('cel2').value.trim()) showSuccessField('cel2', '✔ Listo');
-
   // 📤 Enviar
   const result = await enviarAGoogleSheets();
-
   setTimeout(() => {
     btn.classList.remove('loading');
     btn.disabled = false;
 
+    if (result.duplicate) {
+      return; // ya mostró alerta
+    }
+
     if (result.success) {
       showToast("Registro guardado en Google Sheets ✅");
+      // ✅ Guardar en caché y mostrar botón de edición
+      ultimoRegistroGuardado = guardarEnCache(result.data);
+      mostrarBotonEditarTemporal();
+
       setTimeout(() => {
         const agF = localStorage.getItem('AGENTE');
         const spF = localStorage.getItem('SUPERVISOR');
-        // ✅ Limpiar TODO (incl. inputs de búsqueda)
+        // ✅ Limpiar TODO (incl. inputs de búsqueda y selects)
         ['dni','nombres','fechaNacimiento','sexo','obs','cel1','cel2'].forEach(id => {
           const el = $(id);
           if (el) el.value = '';
         });
-        // ✅ Resetear selects
         ['tipoDoc','sexo','ipress','espe','obsSelect'].forEach(id => {
           const el = $(id);
           if (el) el.value = '';
         });
-        // ✅ Limpiar inputs de búsqueda (¡clave!)
         $('ipress-search').value = '';
         $('espe-search').value = '';
         $('obs').style.display = 'none';
-        // ✅ Restaurar fijados
         if (agF) $('agente').value = agF;
         if (spF) $('supervisor').value = spF;
-        // ✅ Limpiar estilos
         document.querySelectorAll('input, select').forEach(el => {
           el.classList.remove('success', 'incomplete', 'error-field');
         });
@@ -1474,37 +1465,27 @@ $('btnGuardar').addEventListener('click', async function(e){
     }
   }, 800);
 });
-
-
-
-
 // ====================
 // 🔍 FUNCIONES DEL BUSCADOR
 // ====================
-
 // Función para inicializar el buscador en un campo
 function initSearcher(searchInputId, selectId, searchResultsId) {
   const searchInput = $(searchInputId);
   const select = $(selectId);
   const searchResults = $(searchResultsId);
   const originalOptions = Array.from(select.options).map(opt => ({ value: opt.value, text: opt.text }));
-  
   // Mostrar resultados al escribir
   searchInput.addEventListener('input', function() {
     const query = this.value.trim().toLowerCase();
-    
     if (query.length === 0) {
       searchResults.style.display = 'none';
       return;
     }
-    
     const filteredOptions = originalOptions.filter(opt => 
       opt.text.toLowerCase().includes(query) || opt.value.toLowerCase().includes(query)
     );
-    
     // Limpiar resultados
     searchResults.innerHTML = '';
-    
     if (filteredOptions.length === 0) {
       const noResults = document.createElement('div');
       noResults.className = 'search-no-results';
@@ -1526,10 +1507,8 @@ function initSearcher(searchInputId, selectId, searchResultsId) {
         searchResults.appendChild(item);
       });
     }
-    
     searchResults.style.display = 'block';
   });
-  
   // Mostrar todos los resultados al hacer clic en el input
   searchInput.addEventListener('focus', function() {
     if (this.value.trim().length === 0) {
@@ -1550,37 +1529,31 @@ function initSearcher(searchInputId, selectId, searchResultsId) {
       searchResults.style.display = 'block';
     }
   });
-  
   // Ocultar resultados al hacer clic fuera
   document.addEventListener('click', function(e) {
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
       searchResults.style.display = 'none';
     }
   });
-  
   // Seleccionar elemento con teclas de flecha y Enter
   searchInput.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       const items = Array.from(searchResults.querySelectorAll('.search-result-item'));
       if (items.length === 0) return;
-      
       let currentIndex = -1;
       const selectedItem = searchResults.querySelector('.search-result-item.selected');
       if (selectedItem) {
         currentIndex = items.indexOf(selectedItem);
       }
-      
       if (e.key === 'ArrowDown') {
         currentIndex = (currentIndex + 1) % items.length;
       } else if (e.key === 'ArrowUp') {
         currentIndex = (currentIndex - 1 + items.length) % items.length;
       }
-      
       items.forEach((item, index) => {
         item.classList.toggle('selected', index === currentIndex);
       });
-      
       // Scroll al elemento seleccionado
       if (currentIndex >= 0) {
         items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1597,13 +1570,11 @@ function initSearcher(searchInputId, selectId, searchResultsId) {
     }
   });
 }
-
 // Inicializar buscadores para los campos especificados
 initSearcher('agente-search', 'agente', 'agente-search-results');
 initSearcher('supervisor-search', 'supervisor', 'supervisor-search-results');
 initSearcher('ipress-search', 'ipress', 'ipress-search-results');
 initSearcher('espe-search', 'espe', 'espe-search-results');
-
 // Sincronizar el valor del select con el input de búsqueda cuando cambia manualmente
 document.addEventListener('DOMContentLoaded', function() {
   // Para agente
@@ -1616,7 +1587,6 @@ document.addEventListener('DOMContentLoaded', function() {
       searchInput.value = '';
     }
   });
-  
   // Para supervisor
   $('supervisor').addEventListener('change', function() {
     const searchInput = $('supervisor-search');
@@ -1627,7 +1597,6 @@ document.addEventListener('DOMContentLoaded', function() {
       searchInput.value = '';
     }
   });
-  
   // Para ipress
   $('ipress').addEventListener('change', function() {
     const searchInput = $('ipress-search');
@@ -1638,7 +1607,6 @@ document.addEventListener('DOMContentLoaded', function() {
       searchInput.value = '';
     }
   });
-  
   // Para especialidad
   $('espe').addEventListener('change', function() {
     const searchInput = $('espe-search');
@@ -1660,15 +1628,5 @@ $('nombres').addEventListener('input', function() {
   }
 });
 </script>
-
-
-
-
 </body>
 </html>
-
-
-
-
-
-
