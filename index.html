@@ -807,7 +807,7 @@
           </div>
           <select id="ipress" required style="display: none;">
             
-           <option value="">Seleccione IPRESS...</option>
+           <!--<option value="">Seleccione IPRESS...</option>-->
             
 <option value="CM ANCIJE">C.M. ANCIJE</option>
 <option value="CM MALA">C.M. MALA</option>
@@ -1226,32 +1226,57 @@ $('cel2').addEventListener('input', () => validarCelular('cel2', 'checkCel2'));
 });
 
 // Nuevo registro
-$('btnNuevo').addEventListener('click',function(e){ 
+
+
+
+// Nuevo registro
+$('btnNuevo').addEventListener('click', function(e){ 
   e.preventDefault();
+  
   const agF = localStorage.getItem('AGENTE');
   const spF = localStorage.getItem('SUPERVISOR');
   
-  ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','obs','cel1','cel2'].forEach(id=>{
+  // Limpiar todos los campos
+  const fieldsToReset = [
+    'dni', 'nombres', 'fechaNacimiento', 'cel1', 'cel2', 'obs'
+  ];
+  fieldsToReset.forEach(id => {
     const el = $(id);
-    if(el) {
-      if(el.tagName === 'SELECT') {
-        el.selectedIndex = 0;
-        if(id === 'obsSelect') $('obs').style.display = 'none';
-      } else {
-        el.value = '';
-      }
+    if (el) el.value = '';
+  });
+
+  // Limpiar selects obligatorios → forzar valor vacío
+  const selectFields = ['tipoDoc', 'sexo', 'ipress', 'espe', 'obsSelect'];
+  selectFields.forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.value = ''; // ← clave: resetear el select
+      clearFieldStatus(id);
     }
   });
-  
-  if(agF) $('agente').value = agF;
-  if(spF) $('supervisor').value = spF;
-  
+
+  // ✅ Limpiar los inputs de búsqueda (esto es lo nuevo!)
+  $('ipress-search').value = '';
+  $('espe-search').value = '';
+
+  // ✅ Ocultar textarea de observación
+  $('obs').style.display = 'none';
+
+  // ✅ Restaurar Agente/Supervisor si están fijados
+  if (agF) $('agente').value = agF;
+  if (spF) $('supervisor').value = spF;
+
+  // ✅ Limpiar UI: mensajes y clases visuales
   document.querySelectorAll('.status-msg').forEach(el => el.remove());
   document.querySelectorAll('input, select').forEach(el => {
     el.classList.remove('success', 'incomplete', 'error-field');
   });
-  actualizarRegistro(); 
+
+  // ✅ Actualizar registro
+  actualizarRegistro();
 });
+
+
 
 // ✅ VALIDACIÓN FINAL: TODOS OBLIGATORIOS EXCEPTO CELULAR 2
 function validateForm() {
@@ -1368,54 +1393,69 @@ function showToast(message, isSuccess = true) {
 // Guardar + Enviar
 $('btnGuardar').addEventListener('click', async function(e){
   e.preventDefault();
-
   document.querySelectorAll('.status-msg').forEach(el => el.remove());
-
   const firstError = validateForm();
   if(firstError) return;
-
+  
   // 🟡 Activar estado de carga
   const btn = $('btnGuardar');
   btn.classList.add('loading');
   btn.disabled = true;
-
+  
   // ✨ Mostrar éxito local primero
   [
     'agente','supervisor','tipoDoc','dni','nombres','fechaNacimiento','sexo',
     'ipress','espe','obsSelect','cel1'
   ].forEach(id => showSuccessField(id, '✔ Listo'));
-  
   if($('obsSelect').value === 'OTRA' || $('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
   if($('cel2').value.trim()) showSuccessField('cel2', '✔ Listo');
-
+  
   // 📤 Enviar a Google Sheets
   const result = await enviarAGoogleSheets();
-
+  
   // 🟢/🔴 Actualizar botón y mostrar resultado
   setTimeout(() => {
     btn.classList.remove('loading');
     btn.disabled = false;
-
     if (result.success) {
       showToast("Registro guardado en Google Sheets ✅");
-      
       // Limpiar tras éxito
       setTimeout(() => {
         const agF = localStorage.getItem('AGENTE');
         const spF = localStorage.getItem('SUPERVISOR');
         
-        ['dni','nombres','fechaNacimiento','sexo','ipress','espe','obsSelect','cel1','cel2'].forEach(id=>{
+        // Limpiar todos los campos
+        ['dni','nombres','fechaNacimiento','sexo','obs','cel1','cel2'].forEach(id=>{
           const el = $(id);
-          if(el) {
-            if(el.tagName === 'SELECT') el.selectedIndex = 0;
-            else el.value = '';
+          if(el) el.value = '';
+        });
+        
+        // Limpiar selects obligatorios
+        const selectFields = ['tipoDoc', 'sexo', 'ipress', 'espe', 'obsSelect'];
+        selectFields.forEach(id => {
+          const el = $(id);
+          if (el) {
+            el.value = ''; // ← Resetear el select
+            clearFieldStatus(id);
           }
         });
-        $('obs').value = '';
+        
+        // ✅ Limpiar los inputs de búsqueda (esto es lo nuevo!)
+        $('ipress-search').value = '';
+        $('espe-search').value = '';
+        
+        // Ocultar textarea de observación
         $('obs').style.display = 'none';
         
+        // Restaurar Agente/Supervisor si están fijados
         if(agF) $('agente').value = agF;
         if(spF) $('supervisor').value = spF;
+        
+        // Limpiar UI
+        document.querySelectorAll('.status-msg').forEach(el => el.remove());
+        document.querySelectorAll('input, select').forEach(el => {
+          el.classList.remove('success', 'incomplete', 'error-field');
+        });
         
         actualizarRegistro();
       }, 1200);
@@ -1425,6 +1465,9 @@ $('btnGuardar').addEventListener('click', async function(e){
     }
   }, 800);
 });
+
+
+
 
 // ====================
 // 🔍 FUNCIONES DEL BUSCADOR
@@ -1603,7 +1646,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
-
 
 
 
