@@ -1279,40 +1279,48 @@ $('btnNuevo').addEventListener('click', function(e){
 
 
 // ✅ VALIDACIÓN FINAL: TODOS OBLIGATORIOS EXCEPTO CELULAR 2
+
 function validateForm() {
-  const checks = [
-    {id: 'agente', valid: v => v.trim(), msg: 'Agente obligatorio'},
-    {id: 'supervisor', valid: v => v.trim(), msg: 'Supervisor obligatorio'},
-    {id: 'tipoDoc', valid: v => v.trim(), msg: 'Tipo de documento obligatorio'},
-    {id: 'dni', valid: v => v.trim().length === 8, msg: 'DNI: 8 dígitos'},
-    {id: 'nombres', valid: v => v.trim(), msg: 'Nombre obligatorio'},
-    {id: 'fechaNacimiento', valid: v => v.trim(), msg: 'Fecha de nacimiento obligatoria'},
-    {id: 'sexo', valid: v => v.trim(), msg: 'Sexo obligatorio'},
-    {id: 'ipress', valid: v => v.trim(), msg: 'IPRESS obligatoria'},
-    {id: 'espe', valid: v => v.trim(), msg: 'Especialidad obligatoria'},
-    {id: 'obsSelect', valid: v => v.trim(), msg: 'Motivo de observación obligatorio'}
+  let isValid = true;
+
+  const requiredFields = [
+    { id: 'agente',          valid: v => !!v.trim(),                     msg: 'Agente obligatorio' },
+    { id: 'supervisor',      valid: v => !!v.trim(),                     msg: 'Supervisor obligatorio' },
+    { id: 'tipoDoc',         valid: v => !!v.trim(),                     msg: 'Tipo de documento obligatorio' },
+    { id: 'dni',             valid: v => /^\d{8}$/.test(v),             msg: 'DNI: 8 dígitos' },
+    { id: 'nombres',         valid: v => {
+        const clean = v.trim();
+        return clean && /^[A-Z\sÑÁÉÍÓÚÜÓÍ]+$/.test(clean.toUpperCase());
+    }, msg: 'Nombre: solo letras y espacios' },
+    { id: 'fechaNacimiento', valid: v => !!v.trim(),                     msg: 'Fecha de nacimiento obligatoria' },
+    { id: 'sexo',            valid: v => !!v.trim(),                     msg: 'Sexo obligatorio' },
+    { id: 'ipress',          valid: v => !!v.trim(),                     msg: 'IPRESS obligatoria' },
+    { id: 'espe',            valid: v => !!v.trim(),                     msg: 'Especialidad obligatoria' },
+    { id: 'obsSelect',       valid: v => !!v.trim(),                     msg: 'Motivo de observación obligatorio' }
   ];
 
-  let firstError = null;
+  let firstErrorEl = null;
 
-  checks.forEach(({id, valid, msg}) => {
+  requiredFields.forEach(({ id, valid, msg }) => {
     const el = $(id);
-    const val = el ? el.value : '';
-    if(el && !valid(val)) {
+    if (!el) return;
+    const val = el.value || '';
+    if (!valid(val)) {
       showErrorField(id, `✘ ${msg}`);
-      if(!firstError) firstError = el;
-    } else if(el) {
+      if (!firstErrorEl) firstErrorEl = el;
+      isValid = false;
+    } else {
       clearFieldStatus(id);
     }
   });
 
-  const obsSelect = $('obsSelect');
-  const obsTextarea = $('obs');
-  if (obsSelect.value === 'OTRO') {
-    const obsVal = obsTextarea.value.trim();
+  // ✅ Validar detalle si es OTRO
+  if ($('obsSelect').value === 'OTRO') {
+    const obsVal = $('obs').value.trim();
     if (!obsVal) {
       showErrorField('obs', '✘ Detalle obligatorio (motivo: OTRO)');
-      if (!firstError) firstError = obsTextarea;
+      if (!firstErrorEl) firstErrorEl = $('obs');
+      isValid = false;
     } else {
       clearFieldStatus('obs');
     }
@@ -1320,21 +1328,29 @@ function validateForm() {
     clearFieldStatus('obs');
   }
 
+  // ✅ Validar CELULAR 1 (obligatorio, 7-9 dígitos)
   const cel1Val = $('cel1').value.replace(/\D/g, '');
   if (!/^\d{7,9}$/.test(cel1Val)) {
     showErrorField('cel1', '✘ CELULAR 1: 7-9 dígitos');
-    if (!firstError) firstError = $('cel1');
+    if (!firstErrorEl) firstErrorEl = $('cel1');
+    isValid = false;
   } else {
     clearFieldStatus('cel1');
   }
 
-  if (firstError) {
-    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => firstError.focus(), 300);
+  // ✅ Enfocar primer error
+  if (firstErrorEl) {
+    firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Si es ipress/espe, enfocar el input de búsqueda
+    if (firstErrorEl.id === 'ipress') $('ipress-search').focus();
+    else if (firstErrorEl.id === 'espe') $('espe-search').focus();
+    else firstErrorEl.focus();
   }
 
-  return firstError;
+  return isValid; // ✅ true = válido, false = hay errores
 }
+
+
 
 // 📤 ENVIAR A GOOGLE SHEETS
 async function enviarAGoogleSheets() {
@@ -1390,78 +1406,70 @@ function showToast(message, isSuccess = true) {
   setTimeout(() => toast.remove(), 3000);
 }
 
+
+
+
+
 // Guardar + Enviar
 $('btnGuardar').addEventListener('click', async function(e){
   e.preventDefault();
   document.querySelectorAll('.status-msg').forEach(el => el.remove());
-  const firstError = validateForm();
-  if(firstError) return;
-  
-  // 🟡 Activar estado de carga
+
+  // ✅ Validar primero
+  if (!validateForm()) {
+    return; // ← ¡DETENER AQUÍ si hay errores!
+  }
+
+  // ✅ Solo si pasa la validación: continuar
   const btn = $('btnGuardar');
   btn.classList.add('loading');
   btn.disabled = true;
-  
-  // ✨ Mostrar éxito local primero
+
+  // ✅ Mostrar feedback visual
   [
     'agente','supervisor','tipoDoc','dni','nombres','fechaNacimiento','sexo',
     'ipress','espe','obsSelect','cel1'
   ].forEach(id => showSuccessField(id, '✔ Listo'));
-  if($('obsSelect').value === 'OTRA' || $('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
+  if($('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
   if($('cel2').value.trim()) showSuccessField('cel2', '✔ Listo');
-  
-  // 📤 Enviar a Google Sheets
+
+  // 📤 Enviar
   const result = await enviarAGoogleSheets();
-  
-  // 🟢/🔴 Actualizar botón y mostrar resultado
+
   setTimeout(() => {
     btn.classList.remove('loading');
     btn.disabled = false;
+
     if (result.success) {
       showToast("Registro guardado en Google Sheets ✅");
-      // Limpiar tras éxito
       setTimeout(() => {
         const agF = localStorage.getItem('AGENTE');
         const spF = localStorage.getItem('SUPERVISOR');
-        
-        // Limpiar todos los campos
-        ['dni','nombres','fechaNacimiento','sexo','obs','cel1','cel2'].forEach(id=>{
+        // ✅ Limpiar TODO (incl. inputs de búsqueda)
+        ['dni','nombres','fechaNacimiento','sexo','obs','cel1','cel2'].forEach(id => {
           const el = $(id);
-          if(el) el.value = '';
+          if (el) el.value = '';
         });
-        
-        // Limpiar selects obligatorios
-        const selectFields = ['tipoDoc', 'sexo', 'ipress', 'espe', 'obsSelect'];
-        selectFields.forEach(id => {
+        // ✅ Resetear selects
+        ['tipoDoc','sexo','ipress','espe','obsSelect'].forEach(id => {
           const el = $(id);
-          if (el) {
-            el.value = ''; // ← Resetear el select
-            clearFieldStatus(id);
-          }
+          if (el) el.value = '';
         });
-        
-        // ✅ Limpiar los inputs de búsqueda (esto es lo nuevo!)
+        // ✅ Limpiar inputs de búsqueda (¡clave!)
         $('ipress-search').value = '';
         $('espe-search').value = '';
-        
-        // Ocultar textarea de observación
         $('obs').style.display = 'none';
-        
-        // Restaurar Agente/Supervisor si están fijados
-        if(agF) $('agente').value = agF;
-        if(spF) $('supervisor').value = spF;
-        
-        // Limpiar UI
-        document.querySelectorAll('.status-msg').forEach(el => el.remove());
+        // ✅ Restaurar fijados
+        if (agF) $('agente').value = agF;
+        if (spF) $('supervisor').value = spF;
+        // ✅ Limpiar estilos
         document.querySelectorAll('input, select').forEach(el => {
           el.classList.remove('success', 'incomplete', 'error-field');
         });
-        
         actualizarRegistro();
       }, 1200);
     } else {
-      showErrorField('registro', '✘ Error al enviar a Sheets');
-      showToast("Error de red: " + (result.message || "Verifica conexión"), false);
+      showToast("❌ Error al guardar. Verifique conexión.", false);
     }
   }, 800);
 });
@@ -1641,8 +1649,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-
+// ✅ Solo letras y espacios en nombres (cuando no viene de DNI)
+$('nombres').addEventListener('input', function() {
+  // Si el campo es editable (no readOnly), sanitizar entrada
+  if (!this.readOnly) {
+    this.value = this.value
+      .replace(/[^a-zA-Z\sÑñÁáÉéÍíÓóÚúÜü]/g, '') // elimina todo excepto letras y espacios
+      .toUpperCase(); // fuerza mayúsculas (coherente con estilo)
+  }
+});
 </script>
+
+
+
 
 </body>
 </html>
