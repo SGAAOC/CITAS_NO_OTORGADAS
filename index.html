@@ -281,6 +281,7 @@
           <option value="CEDULA">CEDULA</option>
           <option value="PASS">PASS</option>
         </select>
+        <span id="checkTipoDoc" class="check">✔</span>
       </div>
       <div class="col">
         <label>N° DOCUMENTO *</label>
@@ -404,8 +405,8 @@
       <option value="PACIENTE ADSCRITO A PROVINCIA">PACIENTE ADSCRITO A PROVINCIA</option>
 
     </select>
-    <textarea id="obs" placeholder="Detalles adicionales (si aplica)..." style="margin-top:6px;display:none;"></textarea>
     <span id="checkObs" class="check">✔</span>
+    <textarea id="obs" placeholder="Detalles adicionales (si aplica)..." style="margin-top:6px;display:none;"></textarea>
 
     <div class="row">
       <div class="col">
@@ -671,6 +672,26 @@ function validarCelular(inputId, checkId) {
 $('cel1').addEventListener('input', () => validarCelular('cel1', 'checkCel1'));
 $('cel2').addEventListener('input', () => validarCelular('cel2', 'checkCel2'));
 
+// ✅ Activar check inmediato en select (IPRESS, ESPECIALIDAD, OBS)
+['ipress', 'espe', 'obsSelect', 'agente', 'supervisor', 'tipoDoc', 'sexo'].forEach(id => {
+  const el = $(id);
+  if (el) {
+    el.addEventListener('change', function() {
+      const val = this.value.trim();
+      if (val) {
+        showSuccessField(id, '✔ Listo');
+        const chk = $('check' + id.charAt(0).toUpperCase() + id.slice(1));
+        if (chk) {
+          chk.classList.add('visible');
+          setTimeout(() => chk.classList.remove('visible'), 2000);
+        }
+      } else {
+        clearFieldStatus(id);
+      }
+    });
+  }
+});
+
 // Nuevo registro
 $('btnNuevo').addEventListener('click',function(e){ 
   e.preventDefault();
@@ -831,7 +852,7 @@ $('btnGuardar').addEventListener('click', async function(e){
     'ipress','espe','obsSelect','cel1'
   ].forEach(id => showSuccessField(id, '✔ Listo'));
   
-  if($('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
+  if($('obsSelect').value === 'OTRA' || $('obsSelect').value === 'OTRO') showSuccessField('obs', '✔ Detalle agregado');
   if($('cel2').value.trim()) showSuccessField('cel2', '✔ Listo');
 
   // 📤 Enviar a Google Sheets
@@ -874,13 +895,4 @@ $('btnGuardar').addEventListener('click', async function(e){
 </script>
 
 </body>
-
 </html>
-
-
-
-
-
-
-
-
