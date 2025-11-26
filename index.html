@@ -215,6 +215,70 @@
     .row{ flex-direction:column; } 
     .registro::before { animation: none; }
   }
+
+  /* 🔍 ESTILOS DEL BUSCADOR */
+  .search-container {
+    position: relative;
+    margin-top: 6px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    background: white;
+    margin-bottom: 8px;
+    z-index: 10;
+    position: relative;
+  }
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 9;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .search-result-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-transform: uppercase;
+  }
+  .search-result-item:hover {
+    background-color: var(--light);
+  }
+  .search-result-item.selected {
+    background-color: var(--blue);
+    color: white;
+  }
+  .search-no-results {
+    padding: 8px 12px;
+    color: #777;
+    text-align: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    pointer-events: none;
+  }
+  .search-input-wrapper {
+    position: relative;
+  }
+  .search-input-wrapper input {
+    padding-left: 30px;
+  }
 </style>
 </head>
 <body>
@@ -231,19 +295,26 @@
     <div class="row" style="margin-top:10px;">
       <div class="col">
         <label>AGENTE *</label>
-        <select id="agente">
-          <option value="">Seleccione un agente...</option>
-          <option value="AGUILAR ROJAS MARIA">AGUILAR ROJAS MARIA</option>
-          <option value="BENITES QUISPE JUAN">BENITES QUISPE JUAN</option>
-          <option value="CARDENAS FLORES LUISA">CARDENAS FLORES LUISA</option>
-          <option value="DIAZ VARGAS CARLOS">DIAZ VARGAS CARLOS</option>
-          <option value="ESPINOZA TORRES ROSA">ESPINOZA TORRES ROSA</option>
-          <option value="FLORES MENDOZA PEDRO">FLORES MENDOZA PEDRO</option>
-          <option value="GOMEZ RAMIREZ ANA">GOMEZ RAMIREZ ANA</option>
-          <option value="HUAMAN SANCHEZ EDUARDO">HUAMAN SANCHEZ EDUARDO</option>
-          <option value="IBAÑEZ ORTIZ CLAUDIA">IBAÑEZ ORTIZ CLAUDIA</option>
-          <option value="JIMÉNEZ QUISPE MIGUEL">JIMÉNEZ QUISPE MIGUEL</option>
-        </select>
+        <div id="agente-search-container" class="search-container">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="agente-search" class="search-input" placeholder="Buscar agente..." autocomplete="off" />
+          </div>
+          <select id="agente" style="display: none;">
+            <option value="">Seleccione un agente...</option>
+            <option value="AGUILAR ROJAS MARIA">AGUILAR ROJAS MARIA</option>
+            <option value="BENITES QUISPE JUAN">BENITES QUISPE JUAN</option>
+            <option value="CARDENAS FLORES LUISA">CARDENAS FLORES LUISA</option>
+            <option value="DIAZ VARGAS CARLOS">DIAZ VARGAS CARLOS</option>
+            <option value="ESPINOZA TORRES ROSA">ESPINOZA TORRES ROSA</option>
+            <option value="FLORES MENDOZA PEDRO">FLORES MENDOZA PEDRO</option>
+            <option value="GOMEZ RAMIREZ ANA">GOMEZ RAMIREZ ANA</option>
+            <option value="HUAMAN SANCHEZ EDUARDO">HUAMAN SANCHEZ EDUARDO</option>
+            <option value="IBAÑEZ ORTIZ CLAUDIA">IBAÑEZ ORTIZ CLAUDIA</option>
+            <option value="JIMÉNEZ QUISPE MIGUEL">JIMÉNEZ QUISPE MIGUEL</option>
+          </select>
+          <div id="agente-search-results" class="search-results" style="display: none;"></div>
+        </div>
         <div id="agente_fijado" class="fijado-label">🔒 FIJADO</div>
         <div style="margin-top:6px;">
           <button id="fixAgente" class="small-btn notfixed">FIJAR</button>
@@ -253,15 +324,22 @@
       </div>
       <div class="col">
         <label>SUPERVISOR *</label>
-        <select id="supervisor">
-          <option value="">Seleccione un supervisor...</option>
-          <option value="ALARCON VEGA JORGE">ALARCON VEGA JORGE</option>
-          <option value="BARRIENTOS MEJIA KARINA">BARRIENTOS MEJIA KARINA</option>
-          <option value="CASTRO NAVARRO RICARDO">CASTRO NAVARRO RICARDO</option>
-          <option value="DELGADO CUELLAR VERONICA">DELGADO CUELLAR VERONICA</option>
-          <option value="ESCOBAR MIRANDA FERNANDO">ESCOBAR MIRANDA FERNANDO</option>
-          <option value="FERNANDEZ RUIZ GLORIA">FERNANDEZ RUIZ GLORIA</option>
-        </select>
+        <div id="supervisor-search-container" class="search-container">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="supervisor-search" class="search-input" placeholder="Buscar supervisor..." autocomplete="off" />
+          </div>
+          <select id="supervisor" style="display: none;">
+            <option value="">Seleccione un supervisor...</option>
+            <option value="ALARCON VEGA JORGE">ALARCON VEGA JORGE</option>
+            <option value="BARRIENTOS MEJIA KARINA">BARRIENTOS MEJIA KARINA</option>
+            <option value="CASTRO NAVARRO RICARDO">CASTRO NAVARRO RICARDO</option>
+            <option value="DELGADO CUELLAR VERONICA">DELGADO CUELLAR VERONICA</option>
+            <option value="ESCOBAR MIRANDA FERNANDO">ESCOBAR MIRANDA FERNANDO</option>
+            <option value="FERNANDEZ RUIZ GLORIA">FERNANDEZ RUIZ GLORIA</option>
+          </select>
+          <div id="supervisor-search-results" class="search-results" style="display: none;"></div>
+        </div>
         <div id="supervisor_fijado" class="fijado-label">🔒 FIJADO</div>
         <div style="margin-top:6px;">
           <button id="fixSupervisor" class="small-btn notfixed">FIJAR</button>
@@ -314,80 +392,94 @@
     <div class="row">
       <div class="col">
         <label>IPRESS *</label>
-        <select id="ipress" required>
-          <option value="">Seleccione IPRESS...</option>
-          <option value="C.M. ANCIJE">C.M. ANCIJE</option>
-          <option value="C.M. MALA">C.M. MALA</option>
-          <option value="CAP II CHANCAY">CAP II CHANCAY</option>
-          <option value="CAP II LURÍN">CAP II LURÍN</option>
-          <option value="CAP III ALFREDO PIAZZA ROBERTS">CAP III ALFREDO PIAZZA ROBERTS</option>
-          <option value="CAP III CARABAYLLO">CAP III CARABAYLLO</option>
-          <option value="CAP III EL AGUSTINO">CAP III EL AGUSTINO</option>
-          <option value="CAP III HNA. MARIA DONROSE SUTMOLLER">CAP III HNA. MARIA DONROSE SUTMOLLER</option>
-          <option value="CAP III HUARAL">CAP III HUARAL</option>
-          <option value="CAP III HUAYCAN">CAP III HUAYCAN</option>
-          <option value="CAP III INDEPENDENCIA">CAP III INDEPENDENCIA</option>
-          <option value="CAP III LUIS NEGREIROS VEGA">CAP III LUIS NEGREIROS VEGA</option>
-          <option value="CAP III METROPOLITANO CALLAO">CAP III METROPOLITANO CALLAO</option>
-          <option value="CAP III PEDRO REYES BARBOZA">CAP III PEDRO REYES BARBOZA</option>
-          <option value="CAP III PUENTE PIEDRA">CAP III PUENTE PIEDRA</option>
-          <option value="CAP III SAN ISIDRO">CAP III SAN ISIDRO</option>
-          <option value="CAP III SAN JUAN DE MIRAFLORES">CAP III SAN JUAN DE MIRAFLORES</option>
-          <option value="CAP III SURQUILLO">CAP III SURQUILLO</option>
-          <option value="H.I AURELIO DIAZ-UFANO Y PERAL">H.I AURELIO DIAZ-UFANO Y PERAL</option>
-          <option value="H.I CARLOS ALCANTARA BUTTERFIELD">H.I CARLOS ALCANTARA BUTTERFIELD</option>
-          <option value="H.I JORGE VOTO BERNALES CORPANCHO">H.I JORGE VOTO BERNALES CORPANCHO</option>
-          <option value="H.I MARINO MOLINA SCIPPA">H.I MARINO MOLINA SCIPPA</option>
-          <option value="H.I OCTAVIO MONGRUT MUÑOZ">H.I OCTAVIO MONGRUT MUÑOZ</option>
-          <option value="H.I ULDARICO ROCCA FERNANDEZ">H.I ULDARICO ROCCA FERNANDEZ</option>
-          <option value="H.II CAÑETE">H.II CAÑETE</option>
-          <option value="H.II GUSTAVO LANATTA LUJAN">H.II GUSTAVO LANATTA LUJAN</option>
-          <option value="H.II LIMA NORTE - CALLAO L. NEGREIROS V.">H.II LIMA NORTE - CALLAO L. NEGREIROS V.</option>
-          <option value="H.II RAMON CASTILLA">H.II RAMON CASTILLA</option>
-          <option value="H.II VITARTE">H.II VITARTE</option>
-          <option value="H.III HOSPITAL DE EMERGENCIAS GRAU">H.III HOSPITAL DE EMERGENCIAS GRAU</option>
-          <option value="H.III SUAREZ-ANGAMOS">H.III SUAREZ-ANGAMOS</option>
-          <option value="H.N. ALBERTO SABOGAL SOLOGUREN">H.N. ALBERTO SABOGAL SOLOGUREN</option>
-          <option value="H.N. EDGARDO REBAGLIATI MARTINS">H.N. EDGARDO REBAGLIATI MARTINS</option>
-          <option value="IPRESS CLINICA SAN BARTOLOME - HUACHO">IPRESS CLINICA SAN BARTOLOME - HUACHO</option>
-          <option value="IPRESS CLINICA SAN PEDRO">IPRESS CLINICA SAN PEDRO</option>
-          <option value="IPRESS SAN MARTIN DE PORRES">IPRESS SAN MARTIN DE PORRES</option>
-          <option value="POL. CHINCHA">POL. CHINCHA</option>
-          <option value="POL. CHOSICA">POL. CHOSICA</option>
-          <option value="POL. COMPLEJIDAD CRECIENTE SAN NICOLAS">POL. COMPLEJIDAD CRECIENTE SAN NICOLAS</option>
-          <option value="POL. FIORI">POL. FIORI</option>
-          <option value="POL. FRANCISCO PIZARRO">POL. FRANCISCO PIZARRO</option>
-          <option value="POL. JUAN JOSE RODRIGUEZ LAZO">POL. JUAN JOSE RODRIGUEZ LAZO</option>
-          <option value="POL. PABLO BERMUDEZ">POL. PABLO BERMUDEZ</option>
-          <option value="POL. PROCERES">POL. PROCERES</option>
-          <option value="POL. SAN LUIS">POL. SAN LUIS</option>
-          <option value="POL. SANTA CRUZ">POL. SANTA CRUZ</option>
-          <option value="POLICLINICO BAYOVAR">POLICLINICO BAYOVAR</option>
-          <option value="POLICLINICO SAN CARLOS">POLICLINICO SAN CARLOS</option>
-          <option value="RETABLO - COMAS">RETABLO - COMAS</option>
-        </select>
+        <div id="ipress-search-container" class="search-container">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="ipress-search" class="search-input" placeholder="Buscar IPRESS..." autocomplete="off" />
+          </div>
+          <select id="ipress" required style="display: none;">
+            <option value="">Seleccione IPRESS...</option>
+            <option value="C.M. ANCIJE">C.M. ANCIJE</option>
+            <option value="C.M. MALA">C.M. MALA</option>
+            <option value="CAP II CHANCAY">CAP II CHANCAY</option>
+            <option value="CAP II LURÍN">CAP II LURÍN</option>
+            <option value="CAP III ALFREDO PIAZZA ROBERTS">CAP III ALFREDO PIAZZA ROBERTS</option>
+            <option value="CAP III CARABAYLLO">CAP III CARABAYLLO</option>
+            <option value="CAP III EL AGUSTINO">CAP III EL AGUSTINO</option>
+            <option value="CAP III HNA. MARIA DONROSE SUTMOLLER">CAP III HNA. MARIA DONROSE SUTMOLLER</option>
+            <option value="CAP III HUARAL">CAP III HUARAL</option>
+            <option value="CAP III HUAYCAN">CAP III HUAYCAN</option>
+            <option value="CAP III INDEPENDENCIA">CAP III INDEPENDENCIA</option>
+            <option value="CAP III LUIS NEGREIROS VEGA">CAP III LUIS NEGREIROS VEGA</option>
+            <option value="CAP III METROPOLITANO CALLAO">CAP III METROPOLITANO CALLAO</option>
+            <option value="CAP III PEDRO REYES BARBOZA">CAP III PEDRO REYES BARBOZA</option>
+            <option value="CAP III PUENTE PIEDRA">CAP III PUENTE PIEDRA</option>
+            <option value="CAP III SAN ISIDRO">CAP III SAN ISIDRO</option>
+            <option value="CAP III SAN JUAN DE MIRAFLORES">CAP III SAN JUAN DE MIRAFLORES</option>
+            <option value="CAP III SURQUILLO">CAP III SURQUILLO</option>
+            <option value="H.I AURELIO DIAZ-UFANO Y PERAL">H.I AURELIO DIAZ-UFANO Y PERAL</option>
+            <option value="H.I CARLOS ALCANTARA BUTTERFIELD">H.I CARLOS ALCANTARA BUTTERFIELD</option>
+            <option value="H.I JORGE VOTO BERNALES CORPANCHO">H.I JORGE VOTO BERNALES CORPANCHO</option>
+            <option value="H.I MARINO MOLINA SCIPPA">H.I MARINO MOLINA SCIPPA</option>
+            <option value="H.I OCTAVIO MONGRUT MUÑOZ">H.I OCTAVIO MONGRUT MUÑOZ</option>
+            <option value="H.I ULDARICO ROCCA FERNANDEZ">H.I ULDARICO ROCCA FERNANDEZ</option>
+            <option value="H.II CAÑETE">H.II CAÑETE</option>
+            <option value="H.II GUSTAVO LANATTA LUJAN">H.II GUSTAVO LANATTA LUJAN</option>
+            <option value="H.II LIMA NORTE - CALLAO L. NEGREIROS V.">H.II LIMA NORTE - CALLAO L. NEGREIROS V.</option>
+            <option value="H.II RAMON CASTILLA">H.II RAMON CASTILLA</option>
+            <option value="H.II VITARTE">H.II VITARTE</option>
+            <option value="H.III HOSPITAL DE EMERGENCIAS GRAU">H.III HOSPITAL DE EMERGENCIAS GRAU</option>
+            <option value="H.III SUAREZ-ANGAMOS">H.III SUAREZ-ANGAMOS</option>
+            <option value="H.N. ALBERTO SABOGAL SOLOGUREN">H.N. ALBERTO SABOGAL SOLOGUREN</option>
+            <option value="H.N. EDGARDO REBAGLIATI MARTINS">H.N. EDGARDO REBAGLIATI MARTINS</option>
+            <option value="IPRESS CLINICA SAN BARTOLOME - HUACHO">IPRESS CLINICA SAN BARTOLOME - HUACHO</option>
+            <option value="IPRESS CLINICA SAN PEDRO">IPRESS CLINICA SAN PEDRO</option>
+            <option value="IPRESS SAN MARTIN DE PORRES">IPRESS SAN MARTIN DE PORRES</option>
+            <option value="POL. CHINCHA">POL. CHINCHA</option>
+            <option value="POL. CHOSICA">POL. CHOSICA</option>
+            <option value="POL. COMPLEJIDAD CRECIENTE SAN NICOLAS">POL. COMPLEJIDAD CRECIENTE SAN NICOLAS</option>
+            <option value="POL. FIORI">POL. FIORI</option>
+            <option value="POL. FRANCISCO PIZARRO">POL. FRANCISCO PIZARRO</option>
+            <option value="POL. JUAN JOSE RODRIGUEZ LAZO">POL. JUAN JOSE RODRIGUEZ LAZO</option>
+            <option value="POL. PABLO BERMUDEZ">POL. PABLO BERMUDEZ</option>
+            <option value="POL. PROCERES">POL. PROCERES</option>
+            <option value="POL. SAN LUIS">POL. SAN LUIS</option>
+            <option value="POL. SANTA CRUZ">POL. SANTA CRUZ</option>
+            <option value="POLICLINICO BAYOVAR">POLICLINICO BAYOVAR</option>
+            <option value="POLICLINICO SAN CARLOS">POLICLINICO SAN CARLOS</option>
+            <option value="RETABLO - COMAS">RETABLO - COMAS</option>
+          </select>
+          <div id="ipress-search-results" class="search-results" style="display: none;"></div>
+        </div>
         <span id="checkIpress" class="check">✔</span>
       </div>
       <div class="col">
         <label>ESPECIALIDAD *</label>
-        <select id="espe">
-          <option value="">Seleccione especialidad...</option>
-          <option value="MEDICINA GENERAL">MEDICINA GENERAL</option>
-          <option value="PEDIATRÍA">PEDIATRÍA</option>
-          <option value="GINECOLOGÍA Y OBSTETRICIA">GINECOLOGÍA Y OBSTETRICIA</option>
-          <option value="CARDIOLOGÍA">CARDIOLOGÍA</option>
-          <option value="NEUROLOGÍA">NEUROLOGÍA</option>
-          <option value="PSIQUIATRÍA">PSIQUIATRÍA</option>
-          <option value="TRAUMATOLOGÍA">TRAUMATOLOGÍA</option>
-          <option value="DERMATOLOGÍA">DERMATOLOGÍA</option>
-          <option value="ENDOCRINOLOGÍA">ENDOCRINOLOGÍA</option>
-          <option value="NEFROLOGÍA">NEFROLOGÍA</option>
-          <option value="ONCOLOGÍA">ONCOLOGÍA</option>
-          <option value="OFTALMOLOGÍA">OFTALMOLOGÍA</option>
-          <option value="OTORRINOLARINGOLOGÍA">OTORRINOLARINGOLOGÍA</option>
-          <option value="UROLOGÍA">UROLOGÍA</option>
-          <option value="OTRA">OTRA</option>
-        </select>
+        <div id="espe-search-container" class="search-container">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="espe-search" class="search-input" placeholder="Buscar especialidad..." autocomplete="off" />
+          </div>
+          <select id="espe" style="display: none;">
+            <option value="">Seleccione especialidad...</option>
+            <option value="MEDICINA GENERAL">MEDICINA GENERAL</option>
+            <option value="PEDIATRÍA">PEDIATRÍA</option>
+            <option value="GINECOLOGÍA Y OBSTETRICIA">GINECOLOGÍA Y OBSTETRICIA</option>
+            <option value="CARDIOLOGÍA">CARDIOLOGÍA</option>
+            <option value="NEUROLOGÍA">NEUROLOGÍA</option>
+            <option value="PSIQUIATRÍA">PSIQUIATRÍA</option>
+            <option value="TRAUMATOLOGÍA">TRAUMATOLOGÍA</option>
+            <option value="DERMATOLOGÍA">DERMATOLOGÍA</option>
+            <option value="ENDOCRINOLOGÍA">ENDOCRINOLOGÍA</option>
+            <option value="NEFROLOGÍA">NEFROLOGÍA</option>
+            <option value="ONCOLOGÍA">ONCOLOGÍA</option>
+            <option value="OFTALMOLOGÍA">OFTALMOLOGÍA</option>
+            <option value="OTORRINOLARINGOLOGÍA">OTORRINOLARINGOLOGÍA</option>
+            <option value="UROLOGÍA">UROLOGÍA</option>
+            <option value="OTRA">OTRA</option>
+          </select>
+          <div id="espe-search-results" class="search-results" style="display: none;"></div>
+        </div>
         <span id="checkEspe" class="check">✔</span>
       </div>
     </div>
@@ -403,7 +495,6 @@
       <option value="EEL NO OTORGA CITAS DE ESPECIALIDADES EN ALGUNAS IPRESS">EEL NO OTORGA CITAS DE ESPECIALIDADES EN ALGUNAS IPRESS</option>
       <option value="NO HAY CITAS DISPONIBLES DE TELECONSULTA">NO HAY CITAS DISPONIBLES DE TELECONSULTA</option>
       <option value="PACIENTE ADSCRITO A PROVINCIA">PACIENTE ADSCRITO A PROVINCIA</option>
-
     </select>
     <span id="checkObs" class="check">✔</span>
     <textarea id="obs" placeholder="Detalles adicionales (si aplica)..." style="margin-top:6px;display:none;"></textarea>
@@ -892,6 +983,180 @@ $('btnGuardar').addEventListener('click', async function(e){
     }
   }, 800);
 });
+
+// ====================
+// 🔍 FUNCIONES DEL BUSCADOR
+// ====================
+
+// Función para inicializar el buscador en un campo
+function initSearcher(searchInputId, selectId, searchResultsId) {
+  const searchInput = $(searchInputId);
+  const select = $(selectId);
+  const searchResults = $(searchResultsId);
+  const originalOptions = Array.from(select.options).map(opt => ({ value: opt.value, text: opt.text }));
+  
+  // Mostrar resultados al escribir
+  searchInput.addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+    
+    if (query.length === 0) {
+      searchResults.style.display = 'none';
+      return;
+    }
+    
+    const filteredOptions = originalOptions.filter(opt => 
+      opt.text.toLowerCase().includes(query) || opt.value.toLowerCase().includes(query)
+    );
+    
+    // Limpiar resultados
+    searchResults.innerHTML = '';
+    
+    if (filteredOptions.length === 0) {
+      const noResults = document.createElement('div');
+      noResults.className = 'search-no-results';
+      noResults.textContent = 'No se encontraron resultados';
+      searchResults.appendChild(noResults);
+    } else {
+      filteredOptions.forEach(opt => {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.textContent = opt.text;
+        item.dataset.value = opt.value;
+        item.addEventListener('click', function() {
+          select.value = opt.value;
+          searchInput.value = opt.text;
+          searchResults.style.display = 'none';
+          // Disparar evento change para mantener la funcionalidad existente
+          select.dispatchEvent(new Event('change'));
+        });
+        searchResults.appendChild(item);
+      });
+    }
+    
+    searchResults.style.display = 'block';
+  });
+  
+  // Mostrar todos los resultados al hacer clic en el input
+  searchInput.addEventListener('focus', function() {
+    if (this.value.trim().length === 0) {
+      searchResults.innerHTML = '';
+      originalOptions.forEach(opt => {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.textContent = opt.text;
+        item.dataset.value = opt.value;
+        item.addEventListener('click', function() {
+          select.value = opt.value;
+          searchInput.value = opt.text;
+          searchResults.style.display = 'none';
+          select.dispatchEvent(new Event('change'));
+        });
+        searchResults.appendChild(item);
+      });
+      searchResults.style.display = 'block';
+    }
+  });
+  
+  // Ocultar resultados al hacer clic fuera
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.style.display = 'none';
+    }
+  });
+  
+  // Seleccionar elemento con teclas de flecha y Enter
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const items = Array.from(searchResults.querySelectorAll('.search-result-item'));
+      if (items.length === 0) return;
+      
+      let currentIndex = -1;
+      const selectedItem = searchResults.querySelector('.search-result-item.selected');
+      if (selectedItem) {
+        currentIndex = items.indexOf(selectedItem);
+      }
+      
+      if (e.key === 'ArrowDown') {
+        currentIndex = (currentIndex + 1) % items.length;
+      } else if (e.key === 'ArrowUp') {
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+      }
+      
+      items.forEach((item, index) => {
+        item.classList.toggle('selected', index === currentIndex);
+      });
+      
+      // Scroll al elemento seleccionado
+      if (currentIndex >= 0) {
+        items[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const selectedItem = searchResults.querySelector('.search-result-item.selected');
+      if (selectedItem) {
+        select.value = selectedItem.dataset.value;
+        searchInput.value = selectedItem.textContent;
+        searchResults.style.display = 'none';
+        select.dispatchEvent(new Event('change'));
+      }
+    }
+  });
+}
+
+// Inicializar buscadores para los campos especificados
+initSearcher('agente-search', 'agente', 'agente-search-results');
+initSearcher('supervisor-search', 'supervisor', 'supervisor-search-results');
+initSearcher('ipress-search', 'ipress', 'ipress-search-results');
+initSearcher('espe-search', 'espe', 'espe-search-results');
+
+// Sincronizar el valor del select con el input de búsqueda cuando cambia manualmente
+document.addEventListener('DOMContentLoaded', function() {
+  // Para agente
+  $('agente').addEventListener('change', function() {
+    const searchInput = $('agente-search');
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption.value !== '') {
+      searchInput.value = selectedOption.text;
+    } else {
+      searchInput.value = '';
+    }
+  });
+  
+  // Para supervisor
+  $('supervisor').addEventListener('change', function() {
+    const searchInput = $('supervisor-search');
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption.value !== '') {
+      searchInput.value = selectedOption.text;
+    } else {
+      searchInput.value = '';
+    }
+  });
+  
+  // Para ipress
+  $('ipress').addEventListener('change', function() {
+    const searchInput = $('ipress-search');
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption.value !== '') {
+      searchInput.value = selectedOption.text;
+    } else {
+      searchInput.value = '';
+    }
+  });
+  
+  // Para especialidad
+  $('espe').addEventListener('change', function() {
+    const searchInput = $('espe-search');
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption.value !== '') {
+      searchInput.value = selectedOption.text;
+    } else {
+      searchInput.value = '';
+    }
+  });
+});
+
 </script>
 
 </body>
