@@ -1526,7 +1526,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Nombres editable
 $('nombres').addEventListener('input', function() {
   if (!this.readOnly) {
-    this.value = this.value.replace(/[^a-zA-Z\sÑñÁáÉéÍíÓóÚúÜü]/g, '').toUpperCase();
+this.value = this.value.replace(/[^a-zA-Z\sÑñÁáÉéÍíÓóÚúÜü\u0081]/g, '').toUpperCase();
   }
 });
 
@@ -1569,6 +1569,7 @@ function showToast(msg, ok = true) {
 </script>
 </body>
 </html>
+
 
 
 
