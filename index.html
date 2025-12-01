@@ -808,14 +808,14 @@
     <span id="checkNombres" class="check">✔</span>
     <div class="row">
 
-       <!-- 
+       
       <div class="col">
         <label>FECHA DE NACIMIENTO *</label>
         <input id="fechaNacimiento" type="date" />
         <span id="checkFechaNacimiento" class="check">✔</span>
       </div>
       <div class="col">
--->
+
 
         
 
@@ -1258,7 +1258,7 @@ function validateForm() {
     }, getMsg:()=>t==='DNI'?'DNI: 8 dígitos':'Documento obligatorio'},
     {id:'nombres', valid:v=>v.trim() && /^[A-Z\sÑÁÉÍÓÚÜÓÍA‘]+$/.test(v.trim().toUpperCase()), msg:'Nombre: solo letras'},
     
-   // {id:'fechaNacimiento', valid:v=>!!v.trim(), msg:'Fecha obligatoria'},
+    {id:'fechaNacimiento', valid:v=>!!v.trim(), msg:'Fecha obligatoria'},
 
     
     {id:'sexo', valid:v=>!!v.trim(), msg:'Sexo obligatorio'},
@@ -1508,6 +1508,7 @@ function showToast(msg, ok = true) {
 </script>
 </body>
 </html>
+
 
 
 
