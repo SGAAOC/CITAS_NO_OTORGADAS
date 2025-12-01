@@ -1300,7 +1300,9 @@ function validateForm() {
       if(t==='DNI') return /^\d{8}$/.test(v);
       return v.length>=1 && v.length<=20;
     }, getMsg:()=>t==='DNI'?'DNI: 8 dígitos':'Documento obligatorio'},
-    {id:'nombres', valid:v=>v.trim() && /^[A-Z\sÑÁÉÍÓÚÜÓÍA‘]+$/.test(v.trim().toUpperCase()), msg:'Nombre: solo letras'},
+
+    
+   {id:'nombres', valid:v=>v.trim() && /^[A-Z\sÑÁÉÍÓÚÜÓÍA‘\u0081]+$/.test(v.trim().toUpperCase()), msg:'Nombre: solo letras'},
 
 
 
@@ -1523,13 +1525,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Nombres editable
+
+  
+// Nombres editable — ✅ PERMITE  (U+0081) en ADRIAN
 $('nombres').addEventListener('input', function() {
   if (!this.readOnly) {
-this.value = this.value.replace(/[^a-zA-Z\sÑñÁáÉéÍíÓóÚúÜü\u0081]/g, '').toUpperCase();
+    this.value = this.value.replace(/[^a-zA-Z\sÑñÁáÉéÍíÓóÚúÜü\u0081]/g, '').toUpperCase();
   }
 });
 
+
+
+  
 // Nuevo
 $('btnNuevo').addEventListener('click', function(e) {
   e.preventDefault();
@@ -1569,6 +1576,7 @@ function showToast(msg, ok = true) {
 </script>
 </body>
 </html>
+
 
 
 
