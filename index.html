@@ -1155,6 +1155,9 @@ function clearFieldStatus(id) {
   if(m?.classList.contains('status-msg')) m.remove();
 }
 
+
+
+
 // ✅ CORREGIDO: buscarDNI limpia TODO antes
 async function buscarDNI(dni){
   // 🔥 LIMPIEZA TOTAL ANTES DE BUSCAR
@@ -1182,16 +1185,51 @@ async function buscarDNI(dni){
       showSuccessField('nombres', '✅ Nombre cargado');
     }
 
-    // ✅ Fecha
+    // ✅ Fecha — NUEVA FUNCIÓN DE PARSING ROBUSTO
+    function parseDate(dateStr) {
+      if (!dateStr || typeof dateStr !== 'string') return null;
+      dateStr = dateStr.trim();
+
+      const formats = [
+        { regex: /^(\d{4})-(\d{1,2})-(\d{1,2})$/, parts: [1, 2, 3] }, // YYYY-MM-DD
+        { regex: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, parts: [3, 2, 1] }, // DD/MM/YYYY
+        { regex: /^(\d{1,2})-(\d{1,2})-(\d{4})$/, parts: [3, 2, 1] }, // DD-MM-YYYY
+        { regex: /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/, parts: [1, 2, 3] }, // YYYY/MM/DD
+        { regex: /^(\d{8})$/, parts: [1, 2, 3] } // YYYYMMDD
+      ];
+
+      for (let fmt of formats) {
+        const match = dateStr.match(fmt.regex);
+        if (match) {
+          let year, month, day;
+          if (fmt.regex.source === '^\\d{8}$') {
+            year = dateStr.substring(0, 4);
+            month = dateStr.substring(4, 6);
+            day = dateStr.substring(6, 8);
+          } else {
+            year = match[fmt.parts[0]];
+            month = match[fmt.parts[1]];
+            day = match[fmt.parts[2]];
+          }
+
+          // Validar números razonables (evita "121967")
+          if (year.length === 4 && /^[0-9]{4}$/.test(year) && parseInt(year) >= 1900 && parseInt(year) <= 2025 &&
+              month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+            return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          }
+        }
+      }
+      return null;
+    }
+
     let fn = d.fecha_nacimiento || d.fecha_nac || d.fechanac;
     if (fn && typeof fn === 'string') {
-      const p = fn.split(/[\/\-]/);
-      if (p.length === 3) {
-        const [d,m,y] = p[0].length <= 2 ? [p[0],p[1],p[2]] : [p[2],p[1],p[0]];
-        if (y && m && d) {
-          $('fechaNacimiento').value = `${y.padStart(4,'0')}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
-          showSuccessField('fechaNacimiento', '✅ Fecha cargada');
-        }
+      const parsedDate = parseDate(fn);
+      if (parsedDate) {
+        $('fechaNacimiento').value = parsedDate;
+        showSuccessField('fechaNacimiento', '✅ Fecha cargada');
+      } else {
+        showErrorField('fechaNacimiento', '❌ Fecha inválida');
       }
     }
 
@@ -1207,9 +1245,20 @@ async function buscarDNI(dni){
 
     $('checkDni').classList.add('visible');
     setTimeout(() => $('checkDni').classList.remove('visible'), 2000);
-    
-  } catch (err) { /* ya está limpio */ }
+  } catch (err) {
+    console.warn('Error en buscarDNI:', err);
+  }
 }
+
+
+
+
+
+
+
+
+
+
 
 // ✅ Dinámico DNI
 $('dni').addEventListener('input', function() {
@@ -1236,6 +1285,9 @@ function validarCelular(id) {
 $('cel1').addEventListener('input', () => validarCelular('cel1'));
 $('cel2').addEventListener('input', () => validarCelular('cel2'));
 
+
+
+
 // ✅ Validación robusta
 function validateForm() {
   let ok = true, t = $('tipoDoc').value;
@@ -1249,7 +1301,27 @@ function validateForm() {
       return v.length>=1 && v.length<=20;
     }, getMsg:()=>t==='DNI'?'DNI: 8 dígitos':'Documento obligatorio'},
     {id:'nombres', valid:v=>v.trim() && /^[A-Z\sÑÁÉÍÓÚÜÓÍA‘]+$/.test(v.trim().toUpperCase()), msg:'Nombre: solo letras'},
-    {id:'fechaNacimiento', valid:v=>!!v.trim(), msg:'Fecha obligatoria'},
+
+
+
+
+
+   {id:'fechaNacimiento', valid:v=>{
+  if (!v.trim()) return false;
+  const date = new Date(v);
+  // Verifica que sea una fecha real y razonable (no año 121967)
+  return date instanceof Date && !isNaN(date) &&
+         date.getFullYear() >= 1900 && date.getFullYear() <= 2100;
+}, msg:'Fecha inválida o fuera de rango'},
+
+
+
+
+
+
+
+
+
     {id:'sexo', valid:v=>!!v.trim(), msg:'Sexo obligatorio'},
     {id:'ipress', valid:v=>!!v.trim(), msg:'IPRESS obligatoria'},
     {id:'espe', valid:v=>!!v.trim(), msg:'Especialidad obligatoria'},
@@ -1497,7 +1569,6 @@ function showToast(msg, ok = true) {
 </script>
 </body>
 </html>
-
 
 
 
