@@ -372,7 +372,6 @@
 <option value="5073 - CCOLLAZOS ESPINOZA LUIS ALBERTO">5073 - COLLAZOS ESPINOZA LUIS ALBERTO</option>
 <option value="5074 - RAMOS TOLEDO ABRAHAM">5074 - RAMOS TOLEDO ABRAHAM JOSUÉ</option>
 <option value="5076 - PAUCAR HUILLCA JUAN CARLOS">5076 - PAUCAR HUILLCA JUAN CARLOS</option>
-<option value="5078 - SALINAS SIMON DELIA ROSA">5078 - SALINAS SIMON DELIA ROSA</option>
 <option value="5079 - POMATAY CHUQUIYAURI NORMA MARIA">5079 - POMATAY CHUQUIYAURI NORMA MARÍA</option>
 <option value="5080 - BELTRAN SEMINARIO CYNTHIA">5080 - BELTRÁN SEMINARIO CYNTHIA ALEJANDRA</option>
 <option value="5081 - VASQUEZ PEREZ LUZ MARIA">5081 - VÁSQUEZ PÉREZ LUZ MARÍA</option>
@@ -807,19 +806,12 @@
     <input id="nombres" type="text" readonly placeholder="Se autocompleta con DNI (si existe)" />
     <span id="checkNombres" class="check">✔</span>
     <div class="row">
-
-       
       <div class="col">
         <label>FECHA DE NACIMIENTO *</label>
         <input id="fechaNacimiento" type="date" />
         <span id="checkFechaNacimiento" class="check">✔</span>
       </div>
       <div class="col">
-
-
-        
-
-        
         <label>SEXO *</label>
         <select id="sexo">
           <option value="">Seleccione</option>
@@ -829,10 +821,6 @@
         <span id="checkSexo" class="check">✔</span>
       </div>
     </div>
-
-
-
-      
     <div class="row">
       <div class="col">
         <label>IPRESS *</label>
@@ -1257,10 +1245,7 @@ function validateForm() {
       return v.length>=1 && v.length<=20;
     }, getMsg:()=>t==='DNI'?'DNI: 8 dígitos':'Documento obligatorio'},
     {id:'nombres', valid:v=>v.trim() && /^[A-Z\sÑÁÉÍÓÚÜÓÍA‘]+$/.test(v.trim().toUpperCase()), msg:'Nombre: solo letras'},
-    
     {id:'fechaNacimiento', valid:v=>!!v.trim(), msg:'Fecha obligatoria'},
-
-    
     {id:'sexo', valid:v=>!!v.trim(), msg:'Sexo obligatorio'},
     {id:'ipress', valid:v=>!!v.trim(), msg:'IPRESS obligatoria'},
     {id:'espe', valid:v=>!!v.trim(), msg:'Especialidad obligatoria'},
@@ -1508,12 +1493,6 @@ function showToast(msg, ok = true) {
 </script>
 </body>
 </html>
-
-
-
-
-
-
 
 
 
